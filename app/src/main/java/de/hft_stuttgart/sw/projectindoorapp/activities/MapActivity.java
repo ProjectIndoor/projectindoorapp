@@ -73,10 +73,11 @@ public class MapActivity extends AppCompatActivity
             return true;
         }
 
-        
+
         return super.onOptionsItemSelected(item);
     }
 
+    
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
