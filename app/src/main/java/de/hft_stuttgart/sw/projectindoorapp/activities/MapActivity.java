@@ -1,5 +1,6 @@
 package de.hft_stuttgart.sw.projectindoorapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,7 @@ import de.hft_stuttgart.sw.projectindoorapp.R;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MapActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +75,18 @@ public class MapActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openSettingsScreen();
             return true;
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void openSettingsScreen() {
+        Log.d(TAG,"Opening settings");
+        Intent i = new Intent(MapActivity.this, SettingsActivity.class);
+        startActivity(i);
     }
 
     
