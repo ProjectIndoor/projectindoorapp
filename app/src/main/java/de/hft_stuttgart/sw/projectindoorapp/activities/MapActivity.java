@@ -44,22 +44,21 @@ import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,OnMyLocationClickListener,
-        GoogleMap.OnMyLocationButtonClickListener,OnMapReadyCallback,GoogleMap.OnGroundOverlayClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
+        GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
 
-    private static final String TAG = "MapActivity";
+    private static final String LOG_TAG = "MapActivity";
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
     private static final LatLng HFT = new LatLng(48.779844, 9.173462);
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
-//wifi variables
-    WifiManager wifiManager;
-    WifiReceiver receiver;
+    private WifiManager wifiManager;
+    private WifiReceiver receiver;
     // HFT building boundary
-    LatLngBounds hftBounds = new LatLngBounds(
-            new LatLng(48.779565, 9.173414),       // South west corner
-            new LatLng(48.780150, 9.173494));     //  north east corner
+    private LatLngBounds hftBounds = new LatLngBounds(
+            new LatLng(48.779565, 9.173414), // South west corner.
+            new LatLng(48.780150, 9.173494)); //  North east corner.
 
 
     @Override
@@ -95,23 +94,25 @@ public class MapActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //getting wifi manager and reciever for oncreate
+        // Initialize wifi manager and wifi receiver for onCreate.
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         receiver = new WifiReceiver(wifiManager);
     }
-        //onResume methods for WIFI
+
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        registerReceiver(receiver,new IntentFilter(wifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        // Register wifi receiver with IntentFilter.
+        registerReceiver(receiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifiManager.startScan();
     }
-         //onPause methods for WIFI
-    @Override
-    protected void onPause(){
-        super.onPause();
-        unregisterReceiver(receiver);
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister wifi receiver to save battery.
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -149,12 +150,12 @@ public class MapActivity extends AppCompatActivity
     }
 
     void openSettingsScreen() {
-        Log.d(TAG,"Opening settings");
+        Log.d(LOG_TAG, "Opening settings");
         Intent i = new Intent(MapActivity.this, SettingsActivity.class);
         startActivity(i);
     }
 
-    
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -236,11 +237,10 @@ public class MapActivity extends AppCompatActivity
         // North east corner
 
 
-
         hftMap = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
                 .bearing(65)
-                .position(HFT,56f,35f);
+                .position(HFT, 56f, 35f);
 
 
         mMap.addGroundOverlay(hftMap);

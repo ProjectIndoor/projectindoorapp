@@ -6,8 +6,17 @@ package de.hft_stuttgart.sw.projectindoorapp.models;
 
 public class AccessPoint {
     private int id;
-    private String macaddress;
+    private String macAddress;
     private Position position;
+
+    @Override
+    public String toString() {
+        return "AccessPoint{" +
+                "id=" + id +
+                ", macAddress='" + macAddress + '\'' +
+                ", position=" + position +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -17,12 +26,12 @@ public class AccessPoint {
         this.id = id;
     }
 
-    public String getMacaddress() {
-        return macaddress;
+    public String getMacAddress() {
+        return macAddress;
     }
 
-    public void setMacaddress(String macaddress) {
-        this.macaddress = macaddress;
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
     }
 
     public Position getPosition() {

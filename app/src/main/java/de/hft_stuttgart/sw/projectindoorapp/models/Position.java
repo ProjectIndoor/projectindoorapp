@@ -8,8 +8,19 @@ public class Position {
     private int id;
     private float latitude;
     private float longitude;
-    private int floornumber;
+    private int floorNumber;
     private float height;
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", floorNumber=" + floorNumber +
+                ", height=" + height +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -35,12 +46,12 @@ public class Position {
         this.longitude = longitude;
     }
 
-    public int getFloornumber() {
-        return floornumber;
+    public int getFloorNumber() {
+        return floorNumber;
     }
 
-    public void setFloornumber(int floornumber) {
-        this.floornumber = floornumber;
+    public void setFloorNumber(int floorNumber) {
+        this.floorNumber = floorNumber;
     }
 
     public float getHeight() {

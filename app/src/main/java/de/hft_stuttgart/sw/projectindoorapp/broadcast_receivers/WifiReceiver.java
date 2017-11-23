@@ -9,26 +9,34 @@ import android.util.Log;
 
 import java.util.List;
 
+import de.hft_stuttgart.sw.projectindoorapp.models.AccessPoint;
+import de.hft_stuttgart.sw.projectindoorapp.models.RSSISignal;
+
 
 public class WifiReceiver extends BroadcastReceiver {
- WifiManager wifiManager;
 
-public WifiReceiver(WifiManager wifiManager) {
+    private static final String LOG_TAG = "WifiReceiver";
+    private WifiManager wifiManager;
 
-
-    this.wifiManager = wifiManager;
-}
+    public WifiReceiver(WifiManager wifiManager) {
+        this.wifiManager = wifiManager;
+    }
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("WifiReceiver","receive...");
+        Log.i(LOG_TAG, "receive...");
         List<ScanResult> scanResults = this.wifiManager.getScanResults();
-        for(int i=0;i<scanResults.size();i++){
-            ScanResult result=scanResults.get(i);
-            Log.i("WifiReceiver",result.BSSID +"......"+result.level);
+        for (int i = 0; i < scanResults.size(); i++) {
+            ScanResult result = scanResults.get(i);
 
+            AccessPoint accessPoint = new AccessPoint();
+            accessPoint.setMacAddress(result.BSSID);
+            RSSISignal signal = new RSSISignal();
+            signal.setSignalStrength(result.level);
+            signal.setAccessPoint(accessPoint);
 
+            Log.i(LOG_TAG, signal.toString());
         }
     }
 }

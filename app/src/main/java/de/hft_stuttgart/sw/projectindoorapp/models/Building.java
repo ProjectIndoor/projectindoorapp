@@ -7,8 +7,18 @@ package de.hft_stuttgart.sw.projectindoorapp.models;
 public class Building {
     private int id;
     private String name;
-    private Position northEastt;
+    private Position northEast;
     private Position southWest;
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", northEast=" + northEast +
+                ", southWest=" + southWest +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -26,12 +36,12 @@ public class Building {
         this.name = name;
     }
 
-    public Position getNorthEastt() {
-        return northEastt;
+    public Position getNorthEast() {
+        return northEast;
     }
 
-    public void setNorthEastt(Position northEastt) {
-        this.northEastt = northEastt;
+    public void setNorthEast(Position northEast) {
+        this.northEast = northEast;
     }
 
     public Position getSouthWest() {

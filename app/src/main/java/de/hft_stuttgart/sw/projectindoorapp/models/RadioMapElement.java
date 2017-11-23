@@ -8,6 +8,14 @@ public class RadioMapElement {
     private  int id;
     private Position referencePosition;
 
+    @Override
+    public String toString() {
+        return "RadioMapElement{" +
+                "id=" + id +
+                ", referencePosition=" + referencePosition +
+                '}';
+    }
+
     public int getId() {
         return id;
     }
