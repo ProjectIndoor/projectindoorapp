@@ -219,7 +219,7 @@ public class MapActivity extends AppCompatActivity
 
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
 
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(20), 4000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
 
 
