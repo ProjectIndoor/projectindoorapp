@@ -45,7 +45,7 @@ public class MapActivity extends AppCompatActivity
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
-    private static final LatLng HFT = new LatLng(48.779844, 9.173462);
+    private static final LatLng hftPosition = new LatLng(48.779852, 9.173469);
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
 
     // HFT building boundary
@@ -183,15 +183,17 @@ public class MapActivity extends AppCompatActivity
 
         mImages.clear();
 
-        mMap.addMarker(new MarkerOptions().position(HFT).title("HFT,Bau 2"));
+        mMap.addMarker(new MarkerOptions()
+                .position(hftPosition)
+                .title("HFT,Bau 2"));
 
 
         // Zoom in, animating the camera.
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        //mMap.animateCamera(CameraUpdateFactory.zoomIn());
 
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
 
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 4000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(20), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
 
 
@@ -212,8 +214,8 @@ public class MapActivity extends AppCompatActivity
 
         hftMap = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
-                .bearing(65)
-                .position(HFT,56f,35f);
+                .bearing(64+180)
+                .position(hftPosition,56f,35f);
 
 
         mMap.addGroundOverlay(hftMap);
