@@ -4,6 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import java.io.IOException;
+
+import de.hft_stuttgart.sw.projectindoorapp.models.Position;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 
 
@@ -22,8 +26,20 @@ public class PositioningService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void getPositionFromWifiReading(String wifiReading) {
-        positioningService.getPositionForWifiReading(wifiReading);
+    /**
+     * @param wifiReading wifi line
+     * @return returns position received from server or empty position in case of IOException.
+     */
+    public Position getPositionFromWifiReading(String wifiReading) {
+        //Position position;
+        Call<Position> call = positioningService.getPositionForWifiReading(wifiReading);
+
+        try {
+            return call.execute().body();
+        } catch (IOException exception) {
+            // TODO: properly handle exception.
+            return new Position();
+        }
     }
 
 }

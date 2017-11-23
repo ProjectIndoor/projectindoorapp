@@ -1,5 +1,6 @@
 package de.hft_stuttgart.sw.projectindoorapp.services;
 
+import de.hft_stuttgart.sw.projectindoorapp.models.Position;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -11,6 +12,6 @@ import retrofit2.http.Query;
 public interface PositioningRestClient {
 
     @GET("calculatePositionWithWifiReading/")
-    Call<Object> getPositionForWifiReading(@Query("wifiReading") String wifiReading);
+    Call<Position> getPositionForWifiReading(@Query("wifiReading") String wifiReading);
 
 }
