@@ -1,9 +1,12 @@
 package de.hft_stuttgart.sw.projectindoorapp.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
@@ -32,26 +36,29 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.R;
+import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,OnMyLocationClickListener,
-        GoogleMap.OnMyLocationButtonClickListener,OnMapReadyCallback,GoogleMap.OnGroundOverlayClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
+        GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
 
-    private static final String TAG = "MapActivity";
+    private static final String LOG_TAG = "MapActivity";
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
-    private static final LatLng hftPosition = new LatLng(48.779852, 9.173469);
+    private static final LatLng HFT = new LatLng(48.779844, 9.173462);
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
-
+    private WifiManager wifiManager;
+    private WifiReceiver receiver;
     // HFT building boundary
-    LatLngBounds hftBounds = new LatLngBounds(
-            new LatLng(48.779565, 9.173414),       // South west corner
-            new LatLng(48.780150, 9.173494));     //  north east corner
+    private LatLngBounds hftBounds = new LatLngBounds(
+            new LatLng(48.779565, 9.173414), // South west corner.
+            new LatLng(48.780150, 9.173494)); //  North east corner.
 
 
     @Override
@@ -67,7 +74,7 @@ public class MapActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +83,7 @@ public class MapActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-        
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -85,6 +92,27 @@ public class MapActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        // Initialize wifi manager and wifi receiver for onCreate.
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        receiver = new WifiReceiver(wifiManager);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register wifi receiver with IntentFilter.
+        registerReceiver(receiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.startScan();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister wifi receiver to save battery.
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -122,12 +150,12 @@ public class MapActivity extends AppCompatActivity
     }
 
     void openSettingsScreen() {
-        Log.d(TAG,"Opening settings");
+        Log.d(LOG_TAG, "Opening settings");
         Intent i = new Intent(MapActivity.this, SettingsActivity.class);
         startActivity(i);
     }
 
-    
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -183,17 +211,15 @@ public class MapActivity extends AppCompatActivity
 
         mImages.clear();
 
-        mMap.addMarker(new MarkerOptions()
-                .position(hftPosition)
-                .title("HFT,Bau 2"));
+        mMap.addMarker(new MarkerOptions().position(HFT).title("HFT,Bau 2"));
 
 
         // Zoom in, animating the camera.
-        //mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
 
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
 
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(20), 4000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
 
 
@@ -211,11 +237,10 @@ public class MapActivity extends AppCompatActivity
         // North east corner
 
 
-
         hftMap = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
-                .bearing(64+180)
-                .position(hftPosition,56f,35f);
+                .bearing(65)
+                .position(HFT, 56f, 35f);
 
 
         mMap.addGroundOverlay(hftMap);
