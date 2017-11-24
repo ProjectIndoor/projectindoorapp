@@ -1,29 +1,89 @@
 package de.hft_stuttgart.sw.projectindoorapp.activities;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.R;
+import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
+        GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
+
+    private static final String LOG_TAG = "MapActivity";
+
+    private GoogleMap mMap;
+    private GroundOverlayOptions hftMap;
+    private static final LatLng hftPosition = new LatLng(48.779845, 9.173471);
+    private final List<BitmapDescriptor> mImages = new ArrayList<>();
+    private WifiManager wifiManager;
+    private WifiReceiver receiver;
+
+    // HFT building boundary.
+    private LatLng hftSouthWest = new LatLng(48.779565, 9.173414);// South west corner.
+    private LatLng hftNorthEast = new LatLng(48.780150, 9.173494);//  North east corner.
+    private LatLngBounds hftBounds = new LatLngBounds(hftSouthWest, hftNorthEast);
+
+    // Dummy track points.
+    private LatLng trackPoint1 = new LatLng(48.7796250, 9.1735425);
+    private LatLng trackPoint2 = new LatLng(48.7796990, 9.1736891);
+    private LatLng trackPoint3 = new LatLng(48.7797999, 9.1736482);
+    private LatLng trackPoint4 = new LatLng(48.7799577, 9.1735308);
+    private LatLng trackPoint5 = new LatLng(48.7800541, 9.1734591);
+    private LatLng trackPoint6 = new LatLng(48.7800013, 9.1732649);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +102,27 @@ public class MapActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        // Initialize wifi manager and wifi receiver for onCreate.
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        receiver = new WifiReceiver(wifiManager);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register wifi receiver with IntentFilter.
+        registerReceiver(receiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.startScan();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister wifi receiver to save battery.
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -70,11 +151,20 @@ public class MapActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openSettingsScreen();
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
     }
+
+    void openSettingsScreen() {
+        Log.d(LOG_TAG, "Opening settings");
+        Intent i = new Intent(MapActivity.this, SettingsActivity.class);
+        startActivity(i);
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -99,5 +189,88 @@ public class MapActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onGroundOverlayClick(GroundOverlay groundOverlay) {
+
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnGroundOverlayClickListener(this);
+
+        // Add a marker in Stuttgart and move the camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hftBounds.getCenter(), 16));
+        mImages.clear();
+
+        // Call dummy implementation to add access point markers.
+        this.addAccessPointMarkers(mMap);
+
+        // Add Polyline to display dummy track.
+        this.addUserTrack(mMap);
+
+        // Zoom in, animating the camera.
+        // mMap.animateCamera(CameraUpdateFactory.zoomIn());
+
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
+        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            // Show rationale and request permission.
+        }
+
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
+
+        // North east corner
+        hftMap = new GroundOverlayOptions()
+                .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
+                .bearing(64 + 180)
+                .position(hftPosition, 58f, 35f);
+
+        mMap.addGroundOverlay(hftMap);
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Log.i(LOG_TAG, "onMyLocationClick");
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        // TODO : show just the floor map after click
+
+    }
+
+    private void addAccessPointMarkers(GoogleMap map) {
+        // Add dummy markers for now.
+        map.addMarker(new MarkerOptions().position(hftPosition).title("HFT, Bau 2"));
+        map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West"));
+        map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East"));
+    }
+
+    private void addUserTrack(GoogleMap map) {
+        PolylineOptions userTrack = new PolylineOptions()
+                .add(trackPoint1, trackPoint2, trackPoint3, trackPoint4, trackPoint5, trackPoint6)
+                .width(5)
+                .color(Color.RED);
+        map.addPolyline(userTrack);
     }
 }

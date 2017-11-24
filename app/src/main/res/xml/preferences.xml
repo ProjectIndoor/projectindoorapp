@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Set Algorithm"
+        android:key="pref_key_algorithm">
+        <CheckBoxPreference
+            android:key="Algorithm_1"
+            android:summary="WiFi RSSI based location detection"
+            android:title="WiFi Algorithm"
+            android:defaultValue="false"/>
+        <Preference
+            android:key="Algo_2"
+            android:dependency="Algorithm_1"
+            android:summary="Minimum Signal Strength"
+            android:title="Parameter 1"/>
+        <Preference
+            android:key="Algo_3"
+            android:dependency="Algorithm_1"
+            android:summary="Minimum Access Points"
+            android:title="Parameter 2"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
