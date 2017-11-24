@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +57,19 @@ public class MapActivity extends AppCompatActivity
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
     private WifiManager wifiManager;
     private WifiReceiver receiver;
-    // HFT building boundary
-    private LatLngBounds hftBounds = new LatLngBounds(
-            new LatLng(48.779565, 9.173414), // South west corner.
-            new LatLng(48.780150, 9.173494)); //  North east corner.
 
+    // HFT building boundary.
+    private LatLng hftSouthWest = new LatLng(48.779565, 9.173414);// South west corner.
+    private LatLng hftNorthEast = new LatLng(48.780150, 9.173494);//  North east corner.
+    private LatLngBounds hftBounds = new LatLngBounds(hftSouthWest, hftNorthEast);
+
+    // Dummy track points.
+    private LatLng trackPoint1 = new LatLng(48.7796250, 9.1735425);
+    private LatLng trackPoint2 = new LatLng(48.7796990, 9.1736891);
+    private LatLng trackPoint3 = new LatLng(48.7797999, 9.1736482);
+    private LatLng trackPoint4 = new LatLng(48.7799577, 9.1735308);
+    private LatLng trackPoint5 = new LatLng(48.7800541, 9.1734591);
+    private LatLng trackPoint6 = new LatLng(48.7800013, 9.1732649);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,18 +211,18 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
-
         mMap.setOnGroundOverlayClickListener(this);
 
         // Add a marker in Stuttgart and move the camera
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hftBounds.getCenter(), 16));
-
         mImages.clear();
 
-        mMap.addMarker(new MarkerOptions().position(hftPosition).title("HFT,Bau 2"));
+        // Call dummy implementation to add access point markers.
+        this.addAccessPointMarkers(mMap);
 
+        // Add Polyline to display dummy track.
+        this.addUserTrack(mMap);
 
         // Zoom in, animating the camera.
         // mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -221,7 +231,6 @@ public class MapActivity extends AppCompatActivity
 
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
-
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -233,25 +242,35 @@ public class MapActivity extends AppCompatActivity
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
 
-
         // North east corner
-
-
         hftMap = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
-                .bearing(64+180)
+                .bearing(64 + 180)
                 .position(hftPosition, 58f, 35f);
 
-
         mMap.addGroundOverlay(hftMap);
-
     }
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
+        Log.i(LOG_TAG, "onMyLocationClick");
         Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
-
         // TODO : show just the floor map after click
 
+    }
+
+    private void addAccessPointMarkers(GoogleMap map) {
+        // Add dummy markers for now.
+        map.addMarker(new MarkerOptions().position(hftPosition).title("HFT, Bau 2"));
+        map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West"));
+        map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East"));
+    }
+
+    private void addUserTrack(GoogleMap map) {
+        PolylineOptions userTrack = new PolylineOptions()
+                .add(trackPoint1, trackPoint2, trackPoint3, trackPoint4, trackPoint5, trackPoint6)
+                .width(5)
+                .color(Color.RED);
+        map.addPolyline(userTrack);
     }
 }
