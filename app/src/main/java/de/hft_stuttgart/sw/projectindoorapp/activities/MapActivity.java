@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -37,7 +38,6 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -45,6 +45,8 @@ import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
+import de.hft_stuttgart.sw.projectindoorapp.models.Position;
+import de.hft_stuttgart.sw.projectindoorapp.services.PositioningService;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
@@ -269,7 +271,7 @@ public class MapActivity extends AppCompatActivity
         map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West"));
         map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East"));
 
-      //  Display track user walks along [dummy positioning]
+        //  Display track user walks along [dummy positioning]
 
         map.addMarker(new MarkerOptions().position(trackPoint1).title("HFT, Bau 2"));
         map.addMarker(new MarkerOptions().position(trackPoint2).title("HFT, Bau 2"));
@@ -281,9 +283,6 @@ public class MapActivity extends AppCompatActivity
     }
 
 
-
-
-
     private void addUserTrack(GoogleMap map) {
         PolylineOptions userTrack = new PolylineOptions()
                 .add(trackPoint1, trackPoint2, trackPoint3, trackPoint4, trackPoint5, trackPoint6)
@@ -292,5 +291,16 @@ public class MapActivity extends AppCompatActivity
         map.addPolyline(userTrack);
     }
 
+    private class PositioningTask extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            PositioningService positioningService = new PositioningService();
+            Position currentPosition= positioningService.getPositionFromWifiReading("");
+            // this.addPositionToTrack(currentPosition);
+            return null;
+        }
     }
+
+}
 
