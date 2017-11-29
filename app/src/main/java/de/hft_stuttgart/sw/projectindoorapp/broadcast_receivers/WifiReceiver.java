@@ -9,17 +9,22 @@ import android.util.Log;
 
 import java.util.List;
 
+import de.hft_stuttgart.sw.projectindoorapp.activities.MapActivity;
 import de.hft_stuttgart.sw.projectindoorapp.models.AccessPoint;
+import de.hft_stuttgart.sw.projectindoorapp.models.Position;
 import de.hft_stuttgart.sw.projectindoorapp.models.RSSISignal;
+import de.hft_stuttgart.sw.projectindoorapp.services.PositioningService;
 
 
 public class WifiReceiver extends BroadcastReceiver {
 
     private static final String LOG_TAG = "WifiReceiver";
     private WifiManager wifiManager;
+    protected MapActivity activity;
 
-    public WifiReceiver(WifiManager wifiManager) {
+    public WifiReceiver(WifiManager wifiManager, MapActivity activity) {
         this.wifiManager = wifiManager;
+        this.activity = activity;
     }
 
 
@@ -38,5 +43,20 @@ public class WifiReceiver extends BroadcastReceiver {
 
             Log.i(LOG_TAG, signal.toString());
         }
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PositioningService positioningService = new PositioningService();
+                final Position position = positioningService.getPositionFromWifiReading("");
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.addPositionToTrack(position);
+                    }
+                });
+            }
+        });
+        t.start();
     }
 }

@@ -26,7 +26,7 @@ public class Position {
 
     }
 
-    public  Position(double lat, double lng) {
+    public Position(double lat, double lng) {
         latitude = lat;
         longitude = lng;
     }
@@ -43,7 +43,7 @@ public class Position {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -51,7 +51,7 @@ public class Position {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -71,8 +71,4 @@ public class Position {
         this.height = height;
     }
 
-    public void setPosition(double lat, double lng) {
-        latitude = lat;
-        longitude = lng;
-    }
 }

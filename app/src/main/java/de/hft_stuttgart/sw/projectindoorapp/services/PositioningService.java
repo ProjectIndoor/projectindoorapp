@@ -4,8 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import java.io.IOException;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hft_stuttgart.sw.projectindoorapp.models.MockPositionData;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -14,10 +19,13 @@ import retrofit2.Retrofit;
 public class PositioningService extends Service {
 
     private PositioningRestClient positioningService;
+    private List<LatLng> points = new ArrayList<LatLng>();
+
+    private int index = 0;
 
     public PositioningService() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("").build();
-        positioningService = retrofit.create(PositioningRestClient.class);
+        //Retrofit retrofit = new Retrofit.Builder().baseUrl("").build();
+        //positioningService = retrofit.create(PositioningRestClient.class);
     }
 
     @Override
@@ -28,9 +36,14 @@ public class PositioningService extends Service {
 
     /**
      * @param wifiReading wifi line
+     *                    WIFI data: 'WIFI;AppTimestamp(s);SensorTimeStamp(s);Name_SSID;MAC_BSSID;RSS(dBm);
      * @return returns position received from server or empty position in case of IOException.
      */
     public Position getPositionFromWifiReading(String wifiReading) {
+        MockPositionData data = new MockPositionData(new Position(48.780551, 9.171766), new Position(48.780159, 9.173488));
+
+        return data.getPosition();
+        /*
         //Position position;
         Call<Position> call = positioningService.getPositionForWifiReading(wifiReading);
 
@@ -39,7 +52,7 @@ public class PositioningService extends Service {
         } catch (IOException exception) {
             // TODO: properly handle exception.
             return new Position();
-        }
+        }*/
     }
 
 }
