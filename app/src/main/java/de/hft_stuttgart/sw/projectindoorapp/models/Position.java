@@ -22,7 +22,9 @@ public class Position {
                 '}';
     }
 
-    private void position() {}
+    public Position() {
+
+    }
 
     public  Position(double lat, double lng) {
         latitude = lat;
