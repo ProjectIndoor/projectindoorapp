@@ -6,26 +6,23 @@ import android.os.IBinder;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.models.MockPositionData;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
-import retrofit2.Call;
-import retrofit2.Retrofit;
 
 
 public class PositioningService extends Service {
 
-    private PositioningRestClient positioningService;
+    private PositionRestClient positioningService;
     private List<LatLng> points = new ArrayList<LatLng>();
 
     private int index = 0;
 
     public PositioningService() {
         //Retrofit retrofit = new Retrofit.Builder().baseUrl("").build();
-        //positioningService = retrofit.create(PositioningRestClient.class);
+        //positioningService = retrofit.create(PositionRestClient.class);
     }
 
     @Override
