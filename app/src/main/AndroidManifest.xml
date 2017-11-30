@@ -37,13 +37,19 @@
             android:name="activities.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.SettingsActivity"
-            android:theme="@style/indoormap"></activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:theme="@style/indoormap" />
 
         <receiver
             android:name=".broadcast_receivers.WifiReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <service
+            android:name=".services.PositioningService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

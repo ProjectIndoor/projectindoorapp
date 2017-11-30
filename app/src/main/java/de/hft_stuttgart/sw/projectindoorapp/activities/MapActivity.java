@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
+import de.hft_stuttgart.sw.projectindoorapp.models.Position;
+import de.hft_stuttgart.sw.projectindoorapp.services.PositioningService;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
@@ -53,6 +57,9 @@ public class MapActivity extends AppCompatActivity
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
+    private Polyline userTrack;
+
+
     private static final LatLng hftPosition = new LatLng(48.779845, 9.173471);
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
     private WifiManager wifiManager;
@@ -63,13 +70,6 @@ public class MapActivity extends AppCompatActivity
     private LatLng hftNorthEast = new LatLng(48.780150, 9.173494);//  North east corner.
     private LatLngBounds hftBounds = new LatLngBounds(hftSouthWest, hftNorthEast);
 
-    // Dummy track points.
-    private LatLng trackPoint1 = new LatLng(48.7796250, 9.1735425);
-    private LatLng trackPoint2 = new LatLng(48.7796990, 9.1736891);
-    private LatLng trackPoint3 = new LatLng(48.7797999, 9.1736482);
-    private LatLng trackPoint4 = new LatLng(48.7799577, 9.1735308);
-    private LatLng trackPoint5 = new LatLng(48.7800541, 9.1734591);
-    private LatLng trackPoint6 = new LatLng(48.7800013, 9.1732649);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,7 @@ public class MapActivity extends AppCompatActivity
 
         // Initialize wifi manager and wifi receiver for onCreate.
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        receiver = new WifiReceiver(wifiManager);
+        receiver = new WifiReceiver(wifiManager, this);
     }
 
     @Override
@@ -155,7 +155,6 @@ public class MapActivity extends AppCompatActivity
             return true;
         }
 
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -164,7 +163,6 @@ public class MapActivity extends AppCompatActivity
         Intent i = new Intent(MapActivity.this, SettingsActivity.class);
         startActivity(i);
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -189,11 +187,6 @@ public class MapActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 
     @Override
@@ -222,7 +215,7 @@ public class MapActivity extends AppCompatActivity
         this.addAccessPointMarkers(mMap);
 
         // Add Polyline to display dummy track.
-        this.addUserTrack(mMap);
+        userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(Color.RED));
 
         // Zoom in, animating the camera.
         // mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -256,7 +249,6 @@ public class MapActivity extends AppCompatActivity
         Log.i(LOG_TAG, "onMyLocationClick");
         Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
         // TODO : show just the floor map after click
-
     }
 
     private void addAccessPointMarkers(GoogleMap map) {
@@ -266,11 +258,11 @@ public class MapActivity extends AppCompatActivity
         map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East"));
     }
 
-    private void addUserTrack(GoogleMap map) {
-        PolylineOptions userTrack = new PolylineOptions()
-                .add(trackPoint1, trackPoint2, trackPoint3, trackPoint4, trackPoint5, trackPoint6)
-                .width(5)
-                .color(Color.RED);
-        map.addPolyline(userTrack);
+    public void addPositionToTrack(Position position) {
+        List<LatLng> points = this.userTrack.getPoints();
+        points.add(new LatLng(position.getLatitude(), position.getLongitude()));
+        this.userTrack.setPoints(points);
     }
+
 }
+

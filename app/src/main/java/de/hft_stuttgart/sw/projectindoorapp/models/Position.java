@@ -6,8 +6,8 @@ package de.hft_stuttgart.sw.projectindoorapp.models;
 
 public class Position {
     private int id;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
     private int floorNumber;
     private float height;
 
@@ -22,6 +22,15 @@ public class Position {
                 '}';
     }
 
+    public Position() {
+
+    }
+
+    public Position(double lat, double lng) {
+        latitude = lat;
+        longitude = lng;
+    }
+
     public int getId() {
         return id;
     }
@@ -30,19 +39,19 @@ public class Position {
         this.id = id;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -61,4 +70,5 @@ public class Position {
     public void setHeight(float height) {
         this.height = height;
     }
+
 }

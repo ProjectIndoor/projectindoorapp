@@ -8,13 +8,14 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
+    <!--mageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/hft_bau2_images"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/hft_bau2_images" />
+
+        android:src="@drawable/hft_bau2_images" /-->
 
 
 
