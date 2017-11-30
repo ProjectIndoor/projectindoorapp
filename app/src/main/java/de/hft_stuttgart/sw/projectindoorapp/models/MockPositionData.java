@@ -16,12 +16,12 @@ public class MockPositionData {
 
 
     // default consturctor. North west and south east Corners are fixed
-    MockPositionData() {
+    public MockPositionData() {
         initStartLocation();
     }
 
     // Constructor with north west corner and south east corner specified by user
-    MockPositionData(Position nwCorner, Position seCorner) {
+    public MockPositionData(Position nwCorner, Position seCorner) {
         nortWestCorner = nwCorner;
         southEastCorner = seCorner;
         initStartLocation();
@@ -74,7 +74,8 @@ public class MockPositionData {
             lngInc = -lngInc;
         }
 
-        newLocation.setPosition(newLat, newLng);
+        newLocation.setLatitude(newLat);
+        newLocation.setLongitude(newLng);
 
         return currentPosition;
     }
