@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +46,6 @@ import java.util.List;
 import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
-import de.hft_stuttgart.sw.projectindoorapp.services.PositioningService;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
@@ -191,10 +189,9 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onGroundOverlayClick(GroundOverlay groundOverlay) {
-        // TEST
 
+        mMap.moveCamera(CameraUpdateFactory.zoomIn());
 
-        // try to create a conflict
     }
 
     @Override
