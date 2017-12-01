@@ -191,7 +191,10 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onGroundOverlayClick(GroundOverlay groundOverlay) {
+        // TEST
 
+
+        // try to create a conflict
     }
 
     @Override
