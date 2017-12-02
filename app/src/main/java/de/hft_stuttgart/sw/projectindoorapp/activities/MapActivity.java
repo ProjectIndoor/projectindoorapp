@@ -121,12 +121,12 @@ public class MapActivity extends AppCompatActivity
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION);
+                //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                //        PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION);
             }
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_REQUEST_CODE_ACCESS_FINE_LOCATION);
+                //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                //        PERMISSIONS_REQUEST_CODE_ACCESS_FINE_LOCATION);
             }
             if (checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_WIFI_STATE},
