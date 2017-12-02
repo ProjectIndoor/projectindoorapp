@@ -1,10 +1,16 @@
 package de.hft_stuttgart.sw.projectindoorapp.models;
 
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Sony on 11/23/2017.
  */
 
-public class RSSISignal {
+public class RSSISignal extends RealmObject {
+
+    @PrimaryKey
     private int id;
     private int signalStrength;
     private AccessPoint accessPoint;

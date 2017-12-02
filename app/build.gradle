@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
@@ -19,6 +20,10 @@ android {
     }
 }
 
+realm {
+    syncEnabled = true
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -29,6 +34,4 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.google.android.gms:play-services-maps:11.4.2'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-
-
 }
