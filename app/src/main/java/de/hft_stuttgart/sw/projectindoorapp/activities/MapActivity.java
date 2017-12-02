@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -62,6 +63,8 @@ public class MapActivity extends AppCompatActivity
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
     private WifiManager wifiManager;
     private WifiReceiver receiver;
+
+    private Marker currentPosition;
 
     // HFT building boundary.
     private LatLng hftSouthWest = new LatLng(48.779565, 9.173414);// South west corner.
@@ -253,14 +256,21 @@ public class MapActivity extends AppCompatActivity
 
     private void addAccessPointMarkers(GoogleMap map) {
         // Add dummy markers for now.
-        map.addMarker(new MarkerOptions().position(hftPosition).title("HFT, Bau 2"));
-        map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West"));
-        map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East"));
+        map.addMarker(new MarkerOptions().position(hftPosition).title("HFT, Bau 2").icon(BitmapDescriptorFactory.fromResource(R.drawable.wifi)));
+        map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West").icon(BitmapDescriptorFactory.fromResource(R.drawable.wifi)));
+        map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East").icon(BitmapDescriptorFactory.fromResource(R.drawable.wifi)));
     }
 
     public void addPositionToTrack(Position position) {
+        LatLng location = new LatLng(position.getLatitude(), position.getLongitude());
+        if (currentPosition != null) {
+            currentPosition.remove();
+        }
+        currentPosition = mMap.addMarker(new MarkerOptions()
+                .position(location)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.walking)));
         List<LatLng> points = this.userTrack.getPoints();
-        points.add(new LatLng(position.getLatitude(), position.getLongitude()));
+        points.add(location);
         this.userTrack.setPoints(points);
     }
 
