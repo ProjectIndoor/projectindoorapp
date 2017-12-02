@@ -14,7 +14,9 @@ import de.hft_stuttgart.sw.projectindoorapp.activities.MapActivity;
 import de.hft_stuttgart.sw.projectindoorapp.models.AccessPoint;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
 import de.hft_stuttgart.sw.projectindoorapp.models.RSSISignal;
+import de.hft_stuttgart.sw.projectindoorapp.models.RadioMapElement;
 import de.hft_stuttgart.sw.projectindoorapp.services.PositioningService;
+import io.realm.Realm;
 
 
 public class WifiReceiver extends BroadcastReceiver {
@@ -22,6 +24,7 @@ public class WifiReceiver extends BroadcastReceiver {
     private static final String LOG_TAG = "WifiReceiver";
     private WifiManager wifiManager;
     protected MapActivity activity;
+    private Realm realm;
 
     public WifiReceiver(WifiManager wifiManager, MapActivity activity) {
         this.wifiManager = wifiManager;
@@ -32,18 +35,53 @@ public class WifiReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(LOG_TAG, "... receive wifi scan results.");
+        realm = Realm.getDefaultInstance();
+        Log.i(LOG_TAG, "receive...");
         List<ScanResult> scanResults = this.wifiManager.getScanResults();
 
         final List<String> wifiReadings = new ArrayList<>();
         String wifiReading;
+
+        RadioMapElement row = new RadioMapElement();
+        int id;
+        try {
+            id = realm.where(RadioMapElement.class).max("id").intValue() + 1;
+        } catch (NullPointerException ex) {
+            id = 0;
+        }
+        row.setId(id);
+
         for (int i = 0; i < scanResults.size(); i++) {
             ScanResult result = scanResults.get(i);
 
             AccessPoint accessPoint = new AccessPoint();
             accessPoint.setMacAddress(result.BSSID);
-            RSSISignal signal = new RSSISignal();
+            try {
+                id = realm.where(AccessPoint.class).max("id").intValue() + 1;
+            } catch (NullPointerException ex) {
+                id = 0;
+            }
+            accessPoint.setId(id);
+
+            final RSSISignal signal = new RSSISignal();
             signal.setSignalStrength(result.level);
+            try {
+                id = realm.where(RSSISignal.class).max("id").intValue() + 1;
+            } catch (NullPointerException ex) {
+                id = 0;
+            }
+            signal.setId(id);
+
             signal.setAccessPoint(accessPoint);
+            signal.setRadioMapElement(row);
+
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealmOrUpdate(signal);
+                }
+            });
 
             // "WIFI;2.795;4985.268;test-CAR;00:0b:86:27:36:c2;-83"
             wifiReading = "WIFI;" + result.timestamp + ";" + result.timestamp + ";" + result.SSID + ";" + result.BSSID + ";" + result.level;

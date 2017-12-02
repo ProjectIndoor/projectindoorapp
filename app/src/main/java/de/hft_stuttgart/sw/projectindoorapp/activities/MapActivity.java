@@ -48,7 +48,11 @@ import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
+import de.hft_stuttgart.sw.projectindoorapp.models.AccessPoint;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
+import de.hft_stuttgart.sw.projectindoorapp.models.RSSISignal;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
@@ -60,6 +64,8 @@ public class MapActivity extends AppCompatActivity
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
     private Polyline userTrack;
+
+    public Realm realm;
 
     private static final LatLng hftPosition = new LatLng(48.779845, 9.173471);
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
@@ -76,8 +82,10 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
+
         setContentView(R.layout.activity_map);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -133,6 +141,24 @@ public class MapActivity extends AppCompatActivity
                 break;
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        final RealmResults<AccessPoint> accessPointResults = realm.where(AccessPoint.class).findAll();
+        final RealmResults<RSSISignal> signalResults = realm.where(RSSISignal.class).findAll();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                signalResults.deleteAllFromRealm();
+                accessPointResults.deleteAllFromRealm();
+            }
+        });
+
+        realm.close();
     }
 
     @Override
@@ -308,4 +334,15 @@ public class MapActivity extends AppCompatActivity
         this.userTrack.setPoints(points);
     }
 
+    public void share(MenuItem item) {
+        // TODO: create file, write WIFI lines in it and share it.
+        RealmResults<RSSISignal> signals = realm.where(RSSISignal.class).findAll();
+
+        Log.i(LOG_TAG, "-------");
+        // TODO: add line without WIFI at beginning, when new block of wifi data starts.
+        for (RSSISignal signal : signals) {
+            Log.i(LOG_TAG, signal.toString());
+        }
+        Log.i(LOG_TAG, "-------");
+    }
 }
