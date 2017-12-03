@@ -54,10 +54,7 @@ public class MapActivity extends AppCompatActivity
         GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
 
     private static final String LOG_TAG = "MapActivityLog";
-    private static final int PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION = 1;
-    private static final int PERMISSIONS_REQUEST_CODE_ACCESS_FINE_LOCATION = 2;
-    private static final int PERMISSIONS_REQUEST_CODE_ACCESS_WIFI_STATE = 3;
-    private static final int PERMISSIONS_REQUEST_CODE_CHANGE_WIFI_STATE = 4;
+    private static final int PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION = 1;
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
@@ -120,21 +117,10 @@ public class MapActivity extends AppCompatActivity
     // Request permission for ACCESS_COARSE_LOCATION.
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                //        PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION);
-            }
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                //        PERMISSIONS_REQUEST_CODE_ACCESS_FINE_LOCATION);
-            }
-            if (checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_WIFI_STATE},
-                        PERMISSIONS_REQUEST_CODE_ACCESS_WIFI_STATE);
-            }
-            if (checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CHANGE_WIFI_STATE},
-                        PERMISSIONS_REQUEST_CODE_CHANGE_WIFI_STATE);
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION);
             }
         }
     }
@@ -142,20 +128,8 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION: {
-                Log.i(LOG_TAG, "ACCESS_COARSE_LOCATION granted.");
-                break;
-            }
-            case PERMISSIONS_REQUEST_CODE_ACCESS_FINE_LOCATION: {
-                Log.i(LOG_TAG, "ACCESS_FINE_LOCATION granted.");
-                break;
-            }
-            case PERMISSIONS_REQUEST_CODE_ACCESS_WIFI_STATE: {
-                Log.i(LOG_TAG, "ACCESS_WIFI_STATE granted.");
-                break;
-            }
-            case PERMISSIONS_REQUEST_CODE_CHANGE_WIFI_STATE: {
-                Log.i(LOG_TAG, "CHANGE_WIFI_STATE granted.");
+            case PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION: {
+                Log.i(LOG_TAG, "ACCESS_LOCATION granted.");
                 break;
             }
         }

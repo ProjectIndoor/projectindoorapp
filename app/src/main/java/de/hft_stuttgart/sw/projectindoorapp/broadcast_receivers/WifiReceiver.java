@@ -58,5 +58,6 @@ public class WifiReceiver extends BroadcastReceiver {
             }
         });
         t.start();
+        this.wifiManager.startScan();
     }
 }
