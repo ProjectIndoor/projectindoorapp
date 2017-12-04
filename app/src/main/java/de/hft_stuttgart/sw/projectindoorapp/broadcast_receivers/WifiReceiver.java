@@ -7,6 +7,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.activities.MapActivity;
@@ -32,6 +33,9 @@ public class WifiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(LOG_TAG, "receive...");
         List<ScanResult> scanResults = this.wifiManager.getScanResults();
+
+        final List<String> wifiReadings = new ArrayList<>();
+        String wifiReading;
         for (int i = 0; i < scanResults.size(); i++) {
             ScanResult result = scanResults.get(i);
 
@@ -41,6 +45,10 @@ public class WifiReceiver extends BroadcastReceiver {
             signal.setSignalStrength(result.level);
             signal.setAccessPoint(accessPoint);
 
+            // "WIFI;2.795;4985.268;test-CAR;00:0b:86:27:36:c2;-83"
+            wifiReading = "WIFI;" + result.timestamp + ";" + result.timestamp + ";" + result.SSID + ";" + result.BSSID + ";" + result.level;
+            wifiReadings.add(wifiReading);
+
             Log.i(LOG_TAG, signal.toString());
         }
 
@@ -48,11 +56,14 @@ public class WifiReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 PositioningService positioningService = new PositioningService();
-                final Position position = positioningService.getPositionFromWifiReading("");
+                final de.hft_stuttgart.sw.projectindoorapp.models.external.Position position = positioningService.generateSinglePositionResult(wifiReadings);
+                final Position currentPosition = new Position();
+                currentPosition.setLatitude(position.getX())
+                        .setLongitude(position.getY());
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        activity.addPositionToTrack(position);
+                        activity.addPositionToTrack(currentPosition);
                     }
                 });
             }

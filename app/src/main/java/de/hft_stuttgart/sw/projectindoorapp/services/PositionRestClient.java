@@ -1,7 +1,9 @@
 package de.hft_stuttgart.sw.projectindoorapp.services;
 
-import de.hft_stuttgart.sw.projectindoorapp.models.Position;
+import de.hft_stuttgart.sw.projectindoorapp.models.external.Position;
+import de.hft_stuttgart.sw.projectindoorapp.models.requests.SinglePositionRequest;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -32,7 +34,7 @@ public interface PositionRestClient {
     //somemore undefined attributes to be added above
 
     @POST("position/generateSinglePositionResult/")
-    public Call<Position> generateSinglePositionResult(@Query("wifiReading")String wifiReading, @Query("withPixelPosition")boolean withPixelPosition);
+    public Call<Position> generateSinglePositionResult(@Body SinglePositionRequest singlePositionRequest);
 
 }
 
