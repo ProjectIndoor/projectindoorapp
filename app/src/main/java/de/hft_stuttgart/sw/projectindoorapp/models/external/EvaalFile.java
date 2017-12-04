@@ -1,5 +1,7 @@
 package de.hft_stuttgart.sw.projectindoorapp.models.external;
 
+import java.util.Map;
+
 /**
  * Created by usman on 04-Dec-17.
  */
@@ -9,6 +11,49 @@ public class EvaalFile {
     private boolean evaluationFile;
     private String sourceFileName;
     private String customFileName;
+    private int appVersion;
+    private Map<Integer, WifiBlock> wifiBlocks;
+    private Building recordedInBuilding;
+    private Phone recordedByPhone;
+    private RadioMap radioMap;
+
+    public Map<Integer, WifiBlock> getWifiBlocks() {
+        return wifiBlocks;
+    }
+
+    public EvaalFile setWifiBlocks(Map<Integer, WifiBlock> wifiBlocks) {
+        this.wifiBlocks = wifiBlocks;
+        return this;
+    }
+
+    public Building getRecordedInBuilding() {
+        return recordedInBuilding;
+    }
+
+    public EvaalFile setRecordedInBuilding(Building recordedInBuilding) {
+        this.recordedInBuilding = recordedInBuilding;
+        return this;
+    }
+
+    public Phone getRecordedByPhone() {
+        return recordedByPhone;
+    }
+
+    public EvaalFile setRecordedByPhone(Phone recordedByPhone) {
+        this.recordedByPhone = recordedByPhone;
+        return this;
+    }
+
+    public RadioMap getRadioMap() {
+        return radioMap;
+    }
+
+    public EvaalFile setRadioMap(RadioMap radioMap) {
+        this.radioMap = radioMap;
+        return this;
+    }
+
+    protected EvaalFile(){}
 
     public Long getId() {
         return id;
@@ -50,5 +95,5 @@ public class EvaalFile {
         this.appVersion = appVersion;
     }
 
-    private int appVersion;
+
 }

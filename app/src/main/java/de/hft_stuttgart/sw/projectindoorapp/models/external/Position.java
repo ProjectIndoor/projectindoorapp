@@ -11,6 +11,7 @@ public class Position {
     private double y;
     private double z;
     private boolean wgs84;
+    public Position(){ }
 
 
     public Long getId() {

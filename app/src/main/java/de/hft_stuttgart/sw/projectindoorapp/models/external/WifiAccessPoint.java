@@ -6,6 +6,20 @@ package de.hft_stuttgart.sw.projectindoorapp.models.external;
 
 public class WifiAccessPoint {
     private Long id;
+    private String macAddress;
+    private Position position;
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public WifiAccessPoint setPosition(Position position) {
+        this.position = position;
+        return this;
+    }
+
+    protected WifiAccessPoint(){}
+
 
     public Long getId() {
         return id;
@@ -25,6 +39,5 @@ public class WifiAccessPoint {
         return this;
     }
 
-    private String macAddress;
 
 }
