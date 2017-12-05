@@ -217,8 +217,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onGroundOverlayClick(GroundOverlay groundOverlay) {
-
-        mMap.moveCamera(CameraUpdateFactory.zoomIn());
+        Log.i(LOG_TAG, "onGroundOverlayClick ...");
 
     }
 
@@ -233,9 +232,11 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Register a listener to respond to clicks on GroundOverlays.
         mMap.setOnGroundOverlayClickListener(this);
 
-        // Add a marker in Stuttgart and move the camera
+        // Add a marker in hft bau 2 and move the camera
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hftBounds.getCenter(), 16));
         mImages.clear();
 
@@ -245,10 +246,7 @@ public class MapActivity extends AppCompatActivity
         // Add Polyline to display dummy track.
         userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(Color.RED));
 
-        // Zoom in, animating the camera.
-        // mMap.animateCamera(CameraUpdateFactory.zoomIn());
-
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        Log.i(LOG_TAG, "onMapReady ...");
 
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
@@ -277,6 +275,8 @@ public class MapActivity extends AppCompatActivity
         Log.i(LOG_TAG, "onMyLocationClick");
         Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
         // TODO : show just the floor map after click
+
+
     }
 
     private void addAccessPointMarkers(GoogleMap map) {
