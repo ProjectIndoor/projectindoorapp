@@ -1,11 +1,28 @@
 package de.hft_stuttgart.sw.projectindoorapp.models.external;
 
+import java.util.List;
+
 /**
  * Created by usman on 04-Dec-17.
  */
 
 public class Phone {
     private Long id;
+    private String manufacturer;
+    private String model;
+    private int apiVersion;
+    private List<EvaalFile> recordedFiles;
+
+    public List<EvaalFile> getRecordedFiles() {
+        return recordedFiles;
+    }
+
+    public Phone setRecordedFiles(List<EvaalFile> recordedFiles) {
+        this.recordedFiles = recordedFiles;
+        return this;
+    }
+
+    protected Phone(){}
 
     public Long getId() {
         return id;
@@ -39,8 +56,6 @@ public class Phone {
         this.apiVersion = apiVersion;
     }
 
-    private String manufacturer;
-    private String model;
-    private int apiVersion;
+
 
 }

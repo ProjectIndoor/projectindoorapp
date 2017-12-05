@@ -9,6 +9,18 @@ public class RssiSignal {
     private double appTimestamp;
     private double rssiSignalStrength;
     private boolean averagedSignalStrength;
+    private WifiAccessPoint wifiAccessPoint;
+
+    public WifiAccessPoint getWifiAccessPoint() {
+        return wifiAccessPoint;
+    }
+
+    public RssiSignal setWifiAccessPoint(WifiAccessPoint wifiAccessPoint) {
+        this.wifiAccessPoint = wifiAccessPoint;
+        return this;
+    }
+
+    protected RssiSignal(){}
 
     public Long getId() {
         return id;
