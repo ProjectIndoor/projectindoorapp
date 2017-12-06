@@ -56,16 +56,15 @@ public class WifiReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 PositioningService positioningService = new PositioningService();
-                final de.hft_stuttgart.sw.projectindoorapp.models.external.Position position = positioningService.generateSinglePositionResult(wifiReadings);
-                final Position currentPosition = new Position();
-                currentPosition.setLatitude(position.getX())
-                        .setLongitude(position.getY());
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.addPositionToTrack(currentPosition);
-                    }
-                });
+                final Position currentPosition = positioningService.generateSinglePositionResult(wifiReadings);
+                if (currentPosition.getLatitude() != 0 && currentPosition.getLongitude() != 0) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.addPositionToTrack(currentPosition);
+                        }
+                    });
+                }
             }
         });
         t.start();

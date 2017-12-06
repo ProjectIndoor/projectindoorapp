@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hft_stuttgart.sw.projectindoorapp.models.MockPositionData;
-import de.hft_stuttgart.sw.projectindoorapp.models.external.Position;
+import de.hft_stuttgart.sw.projectindoorapp.models.Position;
 import de.hft_stuttgart.sw.projectindoorapp.models.requests.SinglePositionRequest;
+import de.hft_stuttgart.sw.projectindoorapp.network.Networking;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PositioningService extends Service {
@@ -25,7 +28,17 @@ public class PositioningService extends Service {
     private int index = 0;
 
     public PositioningService() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://doblix.de/indoorweb/").build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                //.addNetworkInterceptor(this)
+                .connectionPool(Networking.getPool())
+                //.addInterceptor(logging)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://doblix.de/indoorweb/")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         positioningService = retrofit.create(PositionRestClient.class);
     }
 
@@ -60,10 +73,15 @@ public class PositioningService extends Service {
                 .setWithPixelPosition(false)
                 .setWifiReadings(wifiReading);
 
-        Call<Position> call = positioningService.generateSinglePositionResult(singlePositionRequest);
+        Call<de.hft_stuttgart.sw.projectindoorapp.models.external.Position> call;
+        call = positioningService.generateSinglePositionResult(singlePositionRequest);
 
         try {
-            return call.execute().body();
+            de.hft_stuttgart.sw.projectindoorapp.models.external.Position remotePosition = call.execute().body();
+            Position position = new Position();
+            position.setLatitude(remotePosition.getX())
+                    .setLongitude(remotePosition.getY());
+            return position;
         } catch (IOException exception) {
             // TODO: properly handle exception.
             return new Position();
@@ -75,10 +93,10 @@ public class PositioningService extends Service {
      *                    WIFI data: 'WIFI;AppTimestamp(s);SensorTimeStamp(s);Name_SSID;MAC_BSSID;RSS(dBm);
      * @return returns position received from server or empty position in case of IOException.
      */
-    public de.hft_stuttgart.sw.projectindoorapp.models.Position getPositionFromWifiReading(String wifiReading) {
+    public Position getPositionFromWifiReading(String wifiReading) {
         MockPositionData data = new MockPositionData(
-                new de.hft_stuttgart.sw.projectindoorapp.models.Position(48.780551, 9.171766),
-                new de.hft_stuttgart.sw.projectindoorapp.models.Position(48.780159, 9.173488));
+                new Position(48.780551, 9.171766),
+                new Position(48.780159, 9.173488));
 
         return data.getPosition();
     }
