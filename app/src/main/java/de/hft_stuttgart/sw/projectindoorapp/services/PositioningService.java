@@ -23,9 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PositioningService extends Service {
 
     private PositionRestClient positioningService;
-    private List<LatLng> points = new ArrayList<LatLng>();
-
-    private int index = 0;
 
     public PositioningService() {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -54,12 +51,6 @@ public class PositioningService extends Service {
      * @return returns position received from server or empty position in case of IOException.
      */
     public Position generateSinglePositionResult(List<String> wifiReading) {
-        //MockPositionData data = new MockPositionData(new Position(48.780551, 9.171766), new Position(48.780159, 9.173488));
-
-        //return data.getPosition();
-
-        //Position position;
-
         SinglePositionRequest singlePositionRequest = new SinglePositionRequest();
         List<String> projectParameters = new ArrayList<>();
         List<Long> radioMapFiles = new ArrayList<>();
