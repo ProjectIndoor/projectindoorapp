@@ -34,8 +34,8 @@ public class WifiReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(LOG_TAG, "... receive wifi scan results.");
         realm = Realm.getDefaultInstance();
-        Log.i(LOG_TAG, "receive...");
         List<ScanResult> scanResults = this.wifiManager.getScanResults();
 
         final List<String> wifiReadings = new ArrayList<>();
@@ -89,6 +89,7 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.i(LOG_TAG, signal.toString());
         }
 
+        // java.lang.OutOfMemoryError: Could not allocate JNI Env
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -105,6 +106,5 @@ public class WifiReceiver extends BroadcastReceiver {
             }
         });
         t.start();
-        this.wifiManager.startScan();
     }
 }

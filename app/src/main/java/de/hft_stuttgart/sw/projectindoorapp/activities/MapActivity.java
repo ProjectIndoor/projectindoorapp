@@ -10,6 +10,7 @@ import android.location.Location;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -81,6 +82,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         Realm.init(this);
         realm = Realm.getDefaultInstance();
@@ -165,7 +167,18 @@ public class MapActivity extends AppCompatActivity
         super.onResume();
         // Register wifi receiver with IntentFilter.
         registerReceiver(receiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        wifiManager.startScan();
+
+        // Repeatedly start wifi scanning.
+        final Handler wifiHandler = new Handler();
+        final Runnable startWifiScan = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(LOG_TAG, "Start wifi scan...");
+                wifiManager.startScan();
+                wifiHandler.postDelayed(this, 5000);
+            }
+        };
+        wifiHandler.post(startWifiScan);
     }
 
 
@@ -198,7 +211,6 @@ public class MapActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -257,6 +269,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.i(LOG_TAG, "onMapReady ...");
         mMap = googleMap;
 
         // Register a listener to respond to clicks on GroundOverlays.
@@ -269,17 +282,16 @@ public class MapActivity extends AppCompatActivity
         // Call dummy implementation to add access point markers.
         this.addAccessPointMarkers(mMap);
 
-        // Add Polyline to display dummy track.
+        // Add Polyline to display track.
         userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(Color.RED));
-
-        Log.i(LOG_TAG, "onMapReady ...");
 
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
+            // Don't display GPS location of user.
+            mMap.setMyLocationEnabled(false);
         } else {
             // Show rationale and request permission.
         }
@@ -301,8 +313,6 @@ public class MapActivity extends AppCompatActivity
         Log.i(LOG_TAG, "onMyLocationClick");
         Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
         // TODO : show just the floor map after click
-
-
     }
 
     private void addAccessPointMarkers(GoogleMap map) {
@@ -337,4 +347,3 @@ public class MapActivity extends AppCompatActivity
         Log.i(LOG_TAG, "-------");
     }
 }
-
