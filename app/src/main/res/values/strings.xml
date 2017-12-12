@@ -6,4 +6,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="share">Share</string>
+    <string name="send">Send</string>
+    <string name="communicate">Communicate</string>
+    <string name="record_wifi_data">Record wifi data</string>
+    <string name="record_wifi_data_stop">Stop recording wifi data</string>
 </resources>
