@@ -76,6 +76,8 @@ public class PositioningService extends Service {
         } catch (IOException exception) {
             // TODO: properly handle exception.
             return new Position();
+        } catch (NullPointerException exception) {
+            return new Position();
         }
     }
 
