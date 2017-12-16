@@ -1,6 +1,9 @@
 package de.hft_stuttgart.sw.projectindoorapp.services;
 
+import java.util.ArrayList;
+
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
+import de.hft_stuttgart.sw.projectindoorapp.models.external.Project;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -25,7 +28,7 @@ public interface ProjectRestClient {
     public Call<Position> loadSelectedProject(@Query("projectIdentifier") int projectIdentifier);
 
     @GET("project/getAllProjects/")
-    public Call<Position> getAllProjects();
+    public Call<ArrayList<Project>> getAllProjects();
 
     @GET("project/getAllAlgorithmTypes/")
     public Call<Position> getAllAlgorithmTypes();

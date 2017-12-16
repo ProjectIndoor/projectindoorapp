@@ -15,6 +15,7 @@ public class SinglePositionRequest {
     private List<String> projectParameters;
     private boolean withPixelPosition;
     private List<String> wifiReadings;
+    private Long projectId;
 
     public Long getBuildingIdentifier() {
         return buildingIdentifier;
@@ -76,6 +77,15 @@ public class SinglePositionRequest {
 
     public SinglePositionRequest setWifiReadings(List<String> wifiReadings) {
         this.wifiReadings = wifiReadings;
+        return this;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public SinglePositionRequest setProjectId(Long projectId) {
+        this.projectId = projectId;
         return this;
     }
 }
