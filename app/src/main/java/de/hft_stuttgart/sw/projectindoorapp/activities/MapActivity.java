@@ -64,6 +64,7 @@ public class MapActivity extends AppCompatActivity
 
     private static final String LOG_TAG = "MapActivityLog";
     private static final int PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION = 1;
+    private static boolean recordWifiInformation = false;
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
@@ -126,6 +127,17 @@ public class MapActivity extends AppCompatActivity
         this.requestPermissions();
     }
 
+    /*
+    private void toggleRecordWifiButtonText() {
+        MenuItem wifiRecordOption = findViewById(R.id.nav_wifi_recording);
+        if (recordWifiInformation) {
+            wifiRecordOption.setTitle(R.string.record_wifi_data_stop);
+        } else {
+            wifiRecordOption.setTitle(R.string.record_wifi_data);
+        }
+    }
+    */
+
     // Request permission for ACCESS_COARSE_LOCATION.
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -150,10 +162,12 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clearRealm();
+    }
 
+    private void clearRealm() {
         final RealmResults<AccessPoint> accessPointResults = realm.where(AccessPoint.class).findAll();
         final RealmResults<RSSISignal> signalResults = realm.where(RSSISignal.class).findAll();
-
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -161,7 +175,6 @@ public class MapActivity extends AppCompatActivity
                 accessPointResults.deleteAllFromRealm();
             }
         });
-
         realm.close();
     }
 
@@ -237,18 +250,14 @@ public class MapActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_wifi_recording) {
+            Log.i(LOG_TAG, "wifi recording");
+            recordWifiInformation = !recordWifiInformation;
+            clearRealm();
         } else if (id == R.id.nav_share) {
-
+            share(item);
         } else if (id == R.id.nav_send) {
-
+            Log.i(LOG_TAG, "nav_send");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -367,7 +376,7 @@ public class MapActivity extends AppCompatActivity
         Log.i(LOG_TAG, "-------");
         // TODO: add line without WIFI at beginning, when new block of wifi data starts.
         for (RSSISignal signal : signals) {
-            Log.i(LOG_TAG, signal.toString());
+            //Log.i(LOG_TAG, signal.toString());
         }
         Log.i(LOG_TAG, "-------");
     }

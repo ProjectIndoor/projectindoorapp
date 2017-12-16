@@ -3,34 +3,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_wifi_recording"
             android:icon="@android:drawable/alert_light_frame"
-            android:title="X .." />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@android:drawable/alert_light_frame"
-            android:title="Y .." />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@android:drawable/alert_light_frame"
-            android:title="Z .." />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@android:drawable/alert_light_frame"
-            android:title="XYZ .." />
+            android:title="@string/record_wifi_data" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share"
-                android:onClick="share" />
+                android:title="@string/share" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="@string/send" />
         </menu>
     </item>
 
