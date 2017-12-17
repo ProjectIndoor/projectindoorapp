@@ -251,8 +251,8 @@ public class MapActivity extends AppCompatActivity
             recordWifiInformation = !recordWifiInformation;
             clearRealm();
         } else if (id == R.id.nav_share) {
-            share(item);
-        } else if (id == R.id.nav_send) {
+            //share(item);
+        } else if (id == R.id.sharebtn) {
             Log.i(LOG_TAG, "nav_send");
         }
 
@@ -343,7 +343,7 @@ public class MapActivity extends AppCompatActivity
         this.userTrack.setPoints(points);
     }
 
-    public void share(MenuItem item) {
+    public void share(View view) {
         // TODO: create file, write WIFI lines in it and share it.
         RealmResults<RSSISignal> signals = realm.where(RSSISignal.class).findAll();
 
