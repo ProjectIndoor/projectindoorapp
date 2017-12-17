@@ -4,8 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PositioningService extends Service {
 
-    private PositionRestClient positioningService;
+    private PositionRestClient restClient;
 
     public PositioningService() {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -36,7 +34,7 @@ public class PositioningService extends Service {
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        positioningService = retrofit.create(PositionRestClient.class);
+        restClient = retrofit.create(PositionRestClient.class);
     }
 
     @Override
@@ -53,8 +51,11 @@ public class PositioningService extends Service {
     public Position generateSinglePositionResult(List<String> wifiReading) {
         SinglePositionRequest singlePositionRequest = new SinglePositionRequest();
         List<String> projectParameters = new ArrayList<>();
+
+        // TODO: replace parameters with selected parameters from settings page.
         List<Long> radioMapFiles = new ArrayList<>();
         radioMapFiles.add(1L);
+
 
         singlePositionRequest.setAlgorithmType("WIFI")
                 .setBuildingIdentifier(1L)
@@ -62,10 +63,11 @@ public class PositioningService extends Service {
                 .setProjectParameters(projectParameters)
                 .setRadioMapFiles(radioMapFiles)
                 .setWithPixelPosition(false)
-                .setWifiReadings(wifiReading);
+                .setWifiReadings(wifiReading)
+                .setProjectId(2L);
 
         Call<de.hft_stuttgart.sw.projectindoorapp.models.external.Position> call;
-        call = positioningService.generateSinglePositionResult(singlePositionRequest);
+        call = restClient.generateSinglePositionResult(singlePositionRequest);
 
         try {
             de.hft_stuttgart.sw.projectindoorapp.models.external.Position remotePosition = call.execute().body();
@@ -75,6 +77,8 @@ public class PositioningService extends Service {
             return position;
         } catch (IOException exception) {
             // TODO: properly handle exception.
+            return new Position();
+        } catch (NullPointerException exception) {
             return new Position();
         }
     }
