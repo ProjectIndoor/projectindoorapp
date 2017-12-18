@@ -57,14 +57,16 @@ public class PositioningService extends Service {
         radioMapFiles.add(1L);
 
 
-        singlePositionRequest.setAlgorithmType("WIFI")
+        singlePositionRequest.setWithPixelPosition(false)
+                .setWifiReadings(wifiReading)
+                .setProjectId(2L);
+                /*
+                .setAlgorithmType("WIFI")
                 .setBuildingIdentifier(1L)
                 .setEvaluationFile(1L)
                 .setProjectParameters(projectParameters)
-                .setRadioMapFiles(radioMapFiles)
-                .setWithPixelPosition(false)
-                .setWifiReadings(wifiReading)
-                .setProjectId(2L);
+                .setRadioMapFiles(radioMapFiles);
+                */
 
         Call<de.hft_stuttgart.sw.projectindoorapp.models.external.Position> call;
         call = restClient.generateSinglePositionResult(singlePositionRequest);
