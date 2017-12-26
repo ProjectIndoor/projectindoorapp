@@ -21,17 +21,16 @@ import de.hft_stuttgart.sw.projectindoorapp.services.ProjectService;
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG,"Adding settings fragment");
+        Log.d(TAG, "Adding settings fragment");
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
-
-
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -41,41 +40,42 @@ public class SettingsActivity extends AppCompatActivity {
 
             Log.d(TAG, "Adding preferences");
             addPreferencesFromResource(R.xml.preferences);
-
-
         }
 
-       @Override
+        @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-           super.onViewCreated(view, savedInstanceState);
+            super.onViewCreated(view, savedInstanceState);
+            final PreferenceScreen preferenceScreen = this.getPreferenceScreen();
 
-          // ProjectService projectService = new ProjectService();
-           //ArrayList<Project> projects = projectService.getAllProjects();
-           //for(Project project : projects)
-           //{
-           //    Log.d(TAG, "Projects Are" + project.getProjectName());
-           //}
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ProjectService projectService = new ProjectService();
+                    ArrayList<Project> projects = projectService.getAllProjects();
+                    PreferenceCategory projectPref = (PreferenceCategory) preferenceScreen.findPreference("pref_key_proj_info");
+                    ListPreference projectIdList = new ListPreference(preferenceScreen.getContext());
+                    projectIdList.setKey("project_id_list");
+                    projectIdList.setTitle("Project");
+                    projectIdList.setSummary("Select the localization project.");
 
+                    // Get project ids and names from projects list.
+                    String projectNames[] = new String[projects.size()];
+                    String projectIds[] = new String[projects.size()];
+                    Log.i(TAG, "Projects:");
+                    for (int i = 0; i < projects.size(); i++) {
+                        Log.i(TAG, projects.get(i).getProjectId() + " => " + projects.get(i).getProjectName());
+                        projectIds[i] = "" + projects.get(i).getProjectId();
+                        projectNames[i] = projects.get(i).getProjectId() + ": " + projects.get(i).getProjectName() + " (Building: " + projects.get(i).getBuildingName() + ")";
+                    }
 
-           PreferenceScreen preferenceScreen = this.getPreferenceScreen();
-
-            PreferenceCategory projectPref = (PreferenceCategory) preferenceScreen.findPreference("pref_key_proj_info");
-
-            ListPreference projectIdList = new ListPreference(preferenceScreen.getContext());
-            projectIdList.setKey("project_id_list");
-            projectIdList.setSummary("Dynamic list of projects");
-            projectIdList.setTitle("ID::");
-            String projName[] = {"A", "B"};
-            projectIdList.setEntries(projName);
-            String projId[] = {"1", "2"};
-            projectIdList.setEntryValues(projId);
-
-            projectPref.addPreference(projectIdList);
-
+                    // Set drop down entries and initialize preferences.
+                    projectIdList.setEntries(projectNames);
+                    projectIdList.setEntryValues(projectIds);
+                    projectPref.addPreference(projectIdList);
+                }
+            });
+            t.start();
         }
-
-
     }
-
 
 }

@@ -7,10 +7,12 @@ import java.util.List;
  */
 
 public class Project {
-    private Long id;
+    private Long projectId;
     private String projectName;
     private List<Parameter> projectParameters;
     private List<EvaalFile> evaalFiles;
+    private CalculationAlgorithm calculationAlgorithm;
+    private String buildingName;
 
     public List<Parameter> getProjectParameters() {
         return projectParameters;
@@ -30,14 +32,15 @@ public class Project {
         return this;
     }
 
-    protected Project(){}
-
-    public Long getId() {
-        return id;
+    protected Project() {
     }
 
-    public Project setId(Long id) {
-        this.id = id;
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public Project setProjectId(Long projectId) {
+        this.projectId = projectId;
         return this;
     }
 
@@ -59,5 +62,12 @@ public class Project {
         return this;
     }
 
-    private CalculationAlgorithm calculationAlgorithm;
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    public Project setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+        return this;
+    }
 }
