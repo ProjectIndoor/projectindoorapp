@@ -7,9 +7,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +45,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +71,11 @@ public class MapActivity extends AppCompatActivity
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
     private Polyline userTrack;
+
+
+
+    private static final String FILE_NAME = "wifiLog.txt";
+
 
     public Realm realm;
 
@@ -343,15 +354,119 @@ public class MapActivity extends AppCompatActivity
         this.userTrack.setPoints(points);
     }
 
-    public void share(View view) {
+    public void share (View view) throws IOException {
+
         // TODO: create file, write WIFI lines in it and share it.
+
+
+       // File file = new File( context.getFilesDir() +"/" + "wifiLog.txt");
+       // File file = new File(Environment.getExternalStorageDirectory() + "/" + "Email-Ghap/wifiLog.txt");
+        File fileDir = new File(getFilesDir() + File.separator + "export" + File.separator);
+        //fileDir.mkdirs();
+        //File file = new File(fileDir, "export.txt");
+
+
+
         RealmResults<RSSISignal> signals = realm.where(RSSISignal.class).findAll();
+
+        try {
+
+
+
+
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("*/txt");
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, fileDir);
+            startActivity(Intent.createChooser(sharingIntent, "share file with"));
+
+
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Log.i(LOG_TAG, "-------");
         // TODO: add line without WIFI at beginning, when new block of wifi data starts.
         for (RSSISignal signal : signals) {
-            //Log.i(LOG_TAG, signal.toString());
+            Log.i(LOG_TAG, signal.toString());
         }
         Log.i(LOG_TAG, "-------");
     }
+
+
+
+        public void share2(View view) {
+
+            canWriteOnExternalStorage();
+
+            File dir = Environment.getExternalStorageDirectory();
+            //File fileDir = new File(getFilesDir() + File.separator + "export" + File.separator);
+            File fileDir = new File(dir.getAbsolutePath()+"/export/");
+            fileDir.mkdirs();
+
+            //File file = new File(fileDir, "export.txt");
+            // if (!file.getParentFile().exists())
+            //file.getParentFile().mkdirs();
+
+            File file = new File(dir,"export.txt");
+
+            Log.i(LOG_TAG, "-------");
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+
+                RealmResults<RSSISignal> signals = realm.where(RSSISignal.class).findAll();
+
+                int radioMapElement = 0;
+
+                for (RSSISignal signal : signals) {
+                    if (radioMapElement != signal.getRadioMapElement().getId()) {
+                        radioMapElement = signal.getRadioMapElement().getId();
+                        fos.write("\r\n".getBytes());
+                    }
+                    // WIFI;2.795;4985.268;eduroam;00:0b:86:27:35:90;-77
+                    fos.write("WIFI;0.0;0.0;".getBytes());
+                   // fos.write((signal.getAccessPoint().getSSID() + ";").getBytes());
+                    fos.write((signal.getAccessPoint().getMacAddress() + ";").getBytes());
+                    fos.write((signal.getSignalStrength() + "\r\n").getBytes());
+
+                }
+
+                fos.close();
+                Toast.makeText(getBaseContext(), "File saved successfully!",
+                        Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                Log.i(LOG_TAG, "--> FileNotFoundException");
+                return;
+            } catch (IOException e) {
+                Log.i(LOG_TAG, "--> IOException");
+                return;
+            }
+
+
+            // TODO: create file, write WIFI lines in it and share it.
+
+
+            // TODO: add line without WIFI at beginning, when new block of wifi data starts.
+            Log.i(LOG_TAG, "-------");
+            Intent intent = new Intent();
+            intent.setDataAndType(Uri.fromFile(new File(fileDir, "export.txt")), "text/plain");
+            intent.setAction(Intent.ACTION_VIEW);
+            startActivity(Intent.createChooser(intent, "CSV-Reader"));
+        }
+
+    public static boolean canWriteOnExternalStorage() {
+        // get the state of your external storage
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // if storage is mounted return true
+            Log.i(LOG_TAG,"the storage is mounted *****");
+            return true;
+        }
+        return false;
+    }
+
+
 }
