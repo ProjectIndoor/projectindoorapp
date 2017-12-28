@@ -7,11 +7,9 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -45,8 +43,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -255,8 +251,8 @@ public class MapActivity extends AppCompatActivity
             recordWifiInformation = !recordWifiInformation;
             clearRealm();
         } else if (id == R.id.nav_share) {
-            share(item);
-        } else if (id == R.id.nav_send) {
+            //share(item);
+        } else if (id == R.id.sharebtn) {
             Log.i(LOG_TAG, "nav_send");
         }
 
@@ -347,30 +343,8 @@ public class MapActivity extends AppCompatActivity
         this.userTrack.setPoints(points);
     }
 
-    public void share(MenuItem item) {
-
+    public void share(View view) {
         // TODO: create file, write WIFI lines in it and share it.
-
-        String string = "Hello world!";
-        String filename = "wifiData.txt";
-        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +filename);
-        FileOutputStream outputStream;
-
-
-
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/*");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-        startActivity(Intent.createChooser(sharingIntent, "share file with"));
-
         RealmResults<RSSISignal> signals = realm.where(RSSISignal.class).findAll();
 
         Log.i(LOG_TAG, "-------");
@@ -380,5 +354,4 @@ public class MapActivity extends AppCompatActivity
         }
         Log.i(LOG_TAG, "-------");
     }
-
 }

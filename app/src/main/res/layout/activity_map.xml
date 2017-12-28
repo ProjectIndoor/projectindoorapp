@@ -28,14 +28,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
             android:checked="false"
-            android:text="Record Wifi Data" />
+            android:text="@string/record_wifi_data" />
 
         <Button
             android:id="@+id/sharebtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="250dp"
-            android:text="Share" />
+            android:text="@string/share"
+            android:onClick="share" />
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
