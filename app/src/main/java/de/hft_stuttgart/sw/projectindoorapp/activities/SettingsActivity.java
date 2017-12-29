@@ -15,8 +15,10 @@ import android.view.View;
 import java.util.ArrayList;
 
 import de.hft_stuttgart.sw.projectindoorapp.R;
+import de.hft_stuttgart.sw.projectindoorapp.models.external.Building;
 import de.hft_stuttgart.sw.projectindoorapp.models.external.Project;
 import de.hft_stuttgart.sw.projectindoorapp.services.ProjectService;
+import de.hft_stuttgart.sw.projectindoorapp.services.BuildingService;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -61,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
                     // Get project ids and names from projects list.
                     String projectNames[] = new String[projects.size()];
                     String projectIds[] = new String[projects.size()];
-                    Log.i(TAG, "Projects:");
+                    Log.d(TAG, "Projects:");
                     for (int i = 0; i < projects.size(); i++) {
                         Log.i(TAG, projects.get(i).getProjectId() + " => " + projects.get(i).getProjectName());
                         projectIds[i] = "" + projects.get(i).getProjectId();
@@ -72,6 +74,31 @@ public class SettingsActivity extends AppCompatActivity {
                     projectIdList.setEntries(projectNames);
                     projectIdList.setEntryValues(projectIds);
                     projectPref.addPreference(projectIdList);
+                    
+                    BuildingService buildingService = new BuildingService();
+                    ArrayList<Building> buildings = buildingService.getAllBuildings();
+
+                    ListPreference buildingIdList = new ListPreference(preferenceScreen.getContext());
+                    buildingIdList.setKey("Building_id_list");
+                    buildingIdList.setTitle("Building");
+                    buildingIdList.setSummary("Select the Building.");
+
+                    // Get project ids and names from projects list.
+                    String buildingNames[] = new String[buildings.size()];
+                    String buildingIds[] = new String[buildings.size()];
+                    Log.d(TAG, "Buildings:");
+                    for (int i = 0; i < projects.size(); i++) {
+                    Log.i(TAG, buildings.get(i).getId() + " => " + buildings.get(i).getBuildingName());
+                        buildingIds[i] = "" + buildings.get(i).getId();
+                        buildingNames[i] = buildings.get(i).getId() + ": " + buildings.get(i).getBuildingName() + " (Building: " + buildings.get(i).getBuildingName() + ")";
+                }
+
+                    // Set drop down entries and initialize preferences.
+                    buildingIdList.setEntries(buildingNames);
+                    buildingIdList.setEntryValues(buildingIds);
+                    projectPref.addPreference(buildingIdList);
+
+
                 }
             });
             t.start();
