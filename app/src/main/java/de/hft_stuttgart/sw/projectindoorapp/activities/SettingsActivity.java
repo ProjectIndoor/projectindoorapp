@@ -57,8 +57,8 @@ public class SettingsActivity extends AppCompatActivity {
                     ProjectService projectService = new ProjectService();
                     ArrayList<Project> projects = projectService.getAllProjects();
 
-                    Project temp = new Project();
-                    projects.add(temp.setProjectId(5L).setProjectName("foo").setBuildingName("FFUF"));
+                    //Project temp = new Project();
+                    //projects.add(temp.setProjectId(5L).setProjectName("foo").setBuildingName("FFUF"));
 
 
                     PreferenceCategory projectPref = (PreferenceCategory) preferenceScreen.findPreference("pref_key_proj_info");
