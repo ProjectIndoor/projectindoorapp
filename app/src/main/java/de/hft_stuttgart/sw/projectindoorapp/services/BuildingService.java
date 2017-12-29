@@ -38,4 +38,12 @@ public class BuildingService {
         }
     }
 
+    public Building getBuildingByBuildingId(String buildingIdentifier) {
+        try {
+            return this.restClient.getBuildingByBuildingId(buildingIdentifier).execute().body();
+        } catch (IOException e) {
+            return new Building();
+        }
+    }
+
 }

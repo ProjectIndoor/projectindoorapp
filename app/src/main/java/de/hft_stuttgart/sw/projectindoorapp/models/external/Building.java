@@ -21,7 +21,8 @@ public class Building {
     private List<EvaalFile> evaalFiles;
     private List<Floor> buildingFloors;
 
-    protected Building(){}
+    public Building() {
+    }
 
     public Position getNorthEast() {
         return northEast;

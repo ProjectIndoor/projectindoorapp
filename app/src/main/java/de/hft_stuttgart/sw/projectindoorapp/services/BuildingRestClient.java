@@ -20,4 +20,7 @@ public interface BuildingRestClient {
     @GET("building/getAllBuildings/")
     public Call<ArrayList<Building>> getAllBuildings();
 
+    @GET("building/getBuildingByBuildingId")
+    public Call<Building> getBuildingByBuildingId(@Query("buildingIdentifier") String buildingIdentifier);
+
 }

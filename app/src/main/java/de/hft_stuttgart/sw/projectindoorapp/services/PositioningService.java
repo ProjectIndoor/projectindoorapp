@@ -1,13 +1,17 @@
 package de.hft_stuttgart.sw.projectindoorapp.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.models.MockPositionData;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
 import de.hft_stuttgart.sw.projectindoorapp.models.requests.SinglePositionRequest;
@@ -21,8 +25,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PositioningService extends Service {
 
     private PositionRestClient restClient;
+    private Context context;
 
-    public PositioningService() {
+    public PositioningService(Context context) {
         OkHttpClient client = new OkHttpClient.Builder()
                 //.addNetworkInterceptor(this)
                 .connectionPool(Networking.getPool())
@@ -35,6 +40,7 @@ public class PositioningService extends Service {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         restClient = retrofit.create(PositionRestClient.class);
+        this.context = context;
     }
 
     @Override
@@ -56,16 +62,18 @@ public class PositioningService extends Service {
         List<Long> radioMapFiles = new ArrayList<>();
         radioMapFiles.add(1L);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
+        String selectedProject = sharedPreferences.getString(context.getResources().getString(R.string.selected_project_id), "3");
 
         singlePositionRequest.setWithPixelPosition(false)
                 .setWifiReadings(wifiReading)
-                .setProjectId(2L);
-                /*
+                .setProjectIdentifier(Long.parseLong(selectedProject))
                 .setAlgorithmType("WIFI")
-                .setBuildingIdentifier(1L)
+                .setBuildingIdentifier(1L) // TODO: set buildingIdentifier of project.
                 .setEvaluationFile(1L)
                 .setProjectParameters(projectParameters)
                 .setRadioMapFiles(radioMapFiles);
+                /*
                 */
 
         Call<de.hft_stuttgart.sw.projectindoorapp.models.external.Position> call;

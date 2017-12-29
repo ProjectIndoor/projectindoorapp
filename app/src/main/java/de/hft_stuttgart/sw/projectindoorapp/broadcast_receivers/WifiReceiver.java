@@ -30,7 +30,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         Log.i(LOG_TAG, "... receive wifi scan results.");
         List<ScanResult> scanResults = this.wifiManager.getScanResults();
 
@@ -56,7 +56,7 @@ public class WifiReceiver extends BroadcastReceiver {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                PositioningService positioningService = new PositioningService();
+                PositioningService positioningService = new PositioningService(context);
                 final Position currentPosition = positioningService.generateSinglePositionResult(wifiReadings);
                 if (currentPosition.getLatitude() != 0 && currentPosition.getLongitude() != 0) {
                     activity.runOnUiThread(new Runnable() {

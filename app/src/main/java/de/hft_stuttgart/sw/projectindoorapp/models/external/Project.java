@@ -13,6 +13,7 @@ public class Project {
     private List<EvaalFile> evaalFiles;
     private CalculationAlgorithm calculationAlgorithm;
     private String buildingName;
+    private Long buildingId;
 
     public List<Parameter> getProjectParameters() {
         return projectParameters;
@@ -32,7 +33,7 @@ public class Project {
         return this;
     }
 
-    protected Project() {
+    public Project() {
     }
 
     public Long getProjectId() {
@@ -68,6 +69,15 @@ public class Project {
 
     public Project setBuildingName(String buildingName) {
         this.buildingName = buildingName;
+        return this;
+    }
+
+    public Long getBuildingId() {
+        return buildingId;
+    }
+
+    public Project setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
         return this;
     }
 }

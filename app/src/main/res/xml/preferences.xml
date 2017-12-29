@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:title="Project Information"
         android:key="pref_key_proj_info">
-        <ListPreference
+        <!--ListPreference
             android:key="project_id"
             android:summary="Identifier of the project"
             android:title="Project Id"
@@ -19,11 +19,11 @@
             android:key="floor_id"
             android:summary="Floor Id"
             android:title="Floor Id"
-            android:defaultValue="1"/>
+            android:defaultValue="1"/-->
     </PreferenceCategory>
 
 
-    <PreferenceCategory
+    <!--PreferenceCategory
         android:title="Set Algorithm"
         android:key="pref_key_algorithm">
         <CheckBoxPreference
@@ -41,6 +41,6 @@
             android:dependency="Algorithm_1"
             android:summary="Minimum Access Points"
             android:title="Parameter 2"/>
-    </PreferenceCategory>
+    </PreferenceCategory-->
 
 </PreferenceScreen>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -11,6 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -152,6 +154,12 @@ public class MapActivity extends AppCompatActivity
             }
         };
         wifiHandler.post(startWifiScan);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String floorLevel = sharedPref.getString(getString(R.string.selected_floor_level), "5");
+        if (mMap != null) {
+            setFloorMap(Integer.parseInt(floorLevel));
+        }
     }
 
 
@@ -253,13 +261,13 @@ public class MapActivity extends AppCompatActivity
         mImages.clear();
 
         // Call dummy implementation to add access point markers.
-        this.addAccessPointMarkers(mMap);
+        //this.addAccessPointMarkers(mMap);
 
         // Add Polyline to display track.
         userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(Color.RED));
 
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
-        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
+        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map_4));
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -273,13 +281,52 @@ public class MapActivity extends AppCompatActivity
         mMap.setOnMyLocationClickListener(this);
 
         // North east corner
+        setFloorMap(4);
+        //setFloorMap(5);
+    }
+
+    private void setFloorMap(int floorId) {
+        int resource;
+        switch (floorId) {
+            case -2:
+                resource = R.drawable.floor_map_u2;
+                break;
+            case -1:
+                resource = R.drawable.floor_map_u1;
+                break;
+            case 0:
+                resource = R.drawable.floor_map_0;
+                break;
+            case 1:
+                resource = R.drawable.floor_map_1;
+                break;
+            case 2:
+                resource = R.drawable.floor_map_2;
+                break;
+            case 3:
+                resource = R.drawable.floor_map_3;
+                break;
+            case 4:
+                resource = R.drawable.floor_map_4;
+                break;
+            case 5:
+                resource = R.drawable.floor_map_5;
+                break;
+            case 6:
+                resource = R.drawable.floor_map_6;
+                break;
+            default:
+                resource = R.drawable.floor_map_4;
+                break;
+        }
+
         hftMap = new GroundOverlayOptions()
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
+                .image(BitmapDescriptorFactory.fromResource(resource))
                 .bearing(64 + 180)
                 .position(hftPosition, 58f, 35f);
-
         mMap.addGroundOverlay(hftMap);
     }
+
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {

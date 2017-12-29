@@ -7,8 +7,8 @@ import java.util.List;
  */
 
 public class Floor {
-    private Long id;
-    private int level;
+    private Long floorId;
+    private int floorLevel;
     private String floorMapUrl;
     private List<PosiReference> posiReferences;
 
@@ -23,20 +23,22 @@ public class Floor {
 
     protected Floor(){}
 
-    public Long getId() {
-        return id;
+    public Long getFloorId() {
+        return floorId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Floor setFloorId(Long floorId) {
+        this.floorId = floorId;
+        return this;
     }
 
-    public int getLevel() {
-        return level;
+    public int getFloorLevel() {
+        return floorLevel;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public Floor setFloorLevel(int floorLevel) {
+        this.floorLevel = floorLevel;
+        return this;
     }
 
     public String getFloorMapUrl() {
