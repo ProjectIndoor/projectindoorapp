@@ -1,4 +1,4 @@
-# FrontEnd Documentation
+# Application Documentation
 
 ## Libraries
 ## File Structure
