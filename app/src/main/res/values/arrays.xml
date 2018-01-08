@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="project_id_entries">
+        <item>Project Id 1</item>
+        <item>Project Id 2</item>
+        <item>Project Id 3</item>
+        <item>Project Id 4</item>
+    </string-array>
+    <string-array name="project_id_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

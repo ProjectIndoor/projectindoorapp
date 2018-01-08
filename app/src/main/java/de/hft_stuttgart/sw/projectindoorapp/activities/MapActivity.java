@@ -4,12 +4,15 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -37,6 +40,7 @@ import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -47,23 +51,24 @@ import java.util.List;
 import de.hft_stuttgart.sw.projectindoorapp.R;
 import de.hft_stuttgart.sw.projectindoorapp.broadcast_receivers.WifiReceiver;
 import de.hft_stuttgart.sw.projectindoorapp.models.Position;
-import de.hft_stuttgart.sw.projectindoorapp.services.PositioningService;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMyLocationClickListener,
         GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
 
-    private static final String LOG_TAG = "MapActivity";
+    private static final String LOG_TAG = "MapActivityLog";
+    private static final int PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION = 1;
 
     private GoogleMap mMap;
     private GroundOverlayOptions hftMap;
     private Polyline userTrack;
 
-
     private static final LatLng hftPosition = new LatLng(48.779845, 9.173471);
     private final List<BitmapDescriptor> mImages = new ArrayList<>();
     private WifiManager wifiManager;
     private WifiReceiver receiver;
+
+    private Marker currentPosition;
 
     // HFT building boundary.
     private LatLng hftSouthWest = new LatLng(48.779565, 9.173414);// South west corner.
@@ -107,6 +112,29 @@ public class MapActivity extends AppCompatActivity
         // Initialize wifi manager and wifi receiver for onCreate.
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         receiver = new WifiReceiver(wifiManager, this);
+
+        this.requestPermissions();
+    }
+
+    // Request permission for ACCESS_COARSE_LOCATION.
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE_ACCESS_LOCATION: {
+                Log.i(LOG_TAG, "ACCESS_LOCATION granted.");
+                break;
+            }
+        }
     }
 
     @Override
@@ -114,7 +142,24 @@ public class MapActivity extends AppCompatActivity
         super.onResume();
         // Register wifi receiver with IntentFilter.
         registerReceiver(receiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        wifiManager.startScan();
+
+        // Repeatedly start wifi scanning.
+        final Handler wifiHandler = new Handler();
+        final Runnable startWifiScan = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(LOG_TAG, "Start wifi scan...");
+                wifiManager.startScan();
+                wifiHandler.postDelayed(this, 5000);
+            }
+        };
+        wifiHandler.post(startWifiScan);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String floorLevel = sharedPref.getString(getString(R.string.selected_floor_level), "5");
+        if (mMap != null) {
+            setFloorMap(Integer.parseInt(floorLevel));
+        }
     }
 
 
@@ -191,6 +236,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onGroundOverlayClick(GroundOverlay groundOverlay) {
+        Log.i(LOG_TAG, "onGroundOverlayClick ...");
 
     }
 
@@ -204,30 +250,29 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.i(LOG_TAG, "onMapReady ...");
         mMap = googleMap;
+
+        // Register a listener to respond to clicks on GroundOverlays.
         mMap.setOnGroundOverlayClickListener(this);
 
-        // Add a marker in Stuttgart and move the camera
+        // Add a marker in hft bau 2 and move the camera
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hftBounds.getCenter(), 16));
         mImages.clear();
 
         // Call dummy implementation to add access point markers.
-        this.addAccessPointMarkers(mMap);
+        //this.addAccessPointMarkers(mMap);
 
-        // Add Polyline to display dummy track.
+        // Add Polyline to display track.
         userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(Color.RED));
 
-        // Zoom in, animating the camera.
-        // mMap.animateCamera(CameraUpdateFactory.zoomIn());
-
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
-        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map));
+        mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map_4));
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
+            // Don't display GPS location of user.
+            mMap.setMyLocationEnabled(false);
         } else {
             // Show rationale and request permission.
         }
@@ -236,13 +281,52 @@ public class MapActivity extends AppCompatActivity
         mMap.setOnMyLocationClickListener(this);
 
         // North east corner
+        setFloorMap(4);
+        //setFloorMap(5);
+    }
+
+    private void setFloorMap(int floorId) {
+        int resource;
+        switch (floorId) {
+            case -2:
+                resource = R.drawable.floor_map_u2;
+                break;
+            case -1:
+                resource = R.drawable.floor_map_u1;
+                break;
+            case 0:
+                resource = R.drawable.floor_map_0;
+                break;
+            case 1:
+                resource = R.drawable.floor_map_1;
+                break;
+            case 2:
+                resource = R.drawable.floor_map_2;
+                break;
+            case 3:
+                resource = R.drawable.floor_map_3;
+                break;
+            case 4:
+                resource = R.drawable.floor_map_4;
+                break;
+            case 5:
+                resource = R.drawable.floor_map_5;
+                break;
+            case 6:
+                resource = R.drawable.floor_map_6;
+                break;
+            default:
+                resource = R.drawable.floor_map_4;
+                break;
+        }
+
         hftMap = new GroundOverlayOptions()
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.floor_map))
+                .image(BitmapDescriptorFactory.fromResource(resource))
                 .bearing(64 + 180)
                 .position(hftPosition, 58f, 35f);
-
         mMap.addGroundOverlay(hftMap);
     }
+
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
@@ -253,16 +337,22 @@ public class MapActivity extends AppCompatActivity
 
     private void addAccessPointMarkers(GoogleMap map) {
         // Add dummy markers for now.
-        map.addMarker(new MarkerOptions().position(hftPosition).title("HFT, Bau 2"));
-        map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West"));
-        map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East"));
+        map.addMarker(new MarkerOptions().position(hftPosition).title("HFT, Bau 2").icon(BitmapDescriptorFactory.fromResource(R.drawable.wifi)));
+        map.addMarker(new MarkerOptions().position(hftSouthWest).title("HFT, Bau 2 - South West").icon(BitmapDescriptorFactory.fromResource(R.drawable.wifi)));
+        map.addMarker(new MarkerOptions().position(hftNorthEast).title("HFT, Bau 2 - North East").icon(BitmapDescriptorFactory.fromResource(R.drawable.wifi)));
     }
 
     public void addPositionToTrack(Position position) {
+        LatLng location = new LatLng(position.getLatitude(), position.getLongitude());
+        if (currentPosition != null) {
+            currentPosition.remove();
+        }
+        currentPosition = mMap.addMarker(new MarkerOptions()
+                .position(location)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.walking)));
         List<LatLng> points = this.userTrack.getPoints();
-        points.add(new LatLng(position.getLatitude(), position.getLongitude()));
+        points.add(location);
         this.userTrack.setPoints(points);
     }
 
 }
-

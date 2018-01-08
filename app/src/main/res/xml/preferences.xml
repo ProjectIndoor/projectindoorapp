@@ -2,6 +2,28 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="Project Information"
+        android:key="pref_key_proj_info">
+        <!--ListPreference
+            android:key="project_id"
+            android:summary="Identifier of the project"
+            android:title="Project Id"
+            android:entries="@array/project_id_entries"
+            android:entryValues="@array/project_id_values"/>
+        <EditTextPreference
+            android:key="building_id"
+            android:summary="Building Id"
+            android:title="Building Id"
+            android:defaultValue="1"/>
+        <EditTextPreference
+            android:key="floor_id"
+            android:summary="Floor Id"
+            android:title="Floor Id"
+            android:defaultValue="1"/-->
+    </PreferenceCategory>
+
+
+    <!--PreferenceCategory
         android:title="Set Algorithm"
         android:key="pref_key_algorithm">
         <CheckBoxPreference
@@ -19,6 +41,6 @@
             android:dependency="Algorithm_1"
             android:summary="Minimum Access Points"
             android:title="Parameter 2"/>
-    </PreferenceCategory>
+    </PreferenceCategory-->
 
 </PreferenceScreen>
