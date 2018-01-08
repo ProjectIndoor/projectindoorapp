@@ -19,23 +19,57 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_map"
-       >
+        app:headerLayout="@layout/nav_header_map">
 
-        <CheckBox
-            android:id="@+id/wifichk"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
-            android:checked="false"
-            android:text="Record Wifi Data" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="45dp"
+            android:text="@string/project_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="65dp"
+            android:text="@string/nav_backend_section" />
 
         <Button
-            android:id="@+id/sharebtn"
-            android:layout_width="wrap_content"
+            android:id="@+id/link_backend"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="250dp"
-            android:text="Share" />
+
+            android:layout_marginTop="100dp"
+
+            android:onClick="onBackEndClick"
+            android:text="@string/backend_button_text" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="170dp"
+            android:text="@string/nav_github_section" />
+
+        <Button
+            android:id="@+id/link_github"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="200dp"
+
+            android:onClick="onGitHubClick"
+            android:text="@string/github_button_text" />
+
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

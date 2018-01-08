@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -353,6 +354,14 @@ public class MapActivity extends AppCompatActivity
         List<LatLng> points = this.userTrack.getPoints();
         points.add(location);
         this.userTrack.setPoints(points);
+    }
+
+    public void onBackEndClick(View view) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.backend_base_url))));
+    }
+
+    public void onGitHubClick(View view) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_github))));
     }
 
 }
