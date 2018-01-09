@@ -1,4 +1,4 @@
-# Project Indoor App
+# Project Indoor (Mobile)
 
 This application helps a person to navigate inside HFT Building easily. With this app installed in the mobile device a user can see the floor maps of HFT building and gets to know their location, track their recently walked path and gets to know their surrounding area like steps, cafeteria.
 
