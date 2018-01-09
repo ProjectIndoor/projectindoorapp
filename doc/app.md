@@ -10,13 +10,13 @@ In this section, different components of the app will be discussed.
 
 The map view displays a Google map with a floor map of the selected HFT building floor map displaying.
 
-![Map View](images/map_view_1.png)
+![Map View](images/map_view_1.png | width=350)
 
 #### Navigation
 
 The navigation bar enables the user to navigate to the settings page (right cog icon) as well as opening the side menu (hamburger menu icon on the left).
 
-![Navigation bar](images/navigation_bar.png)
+![Navigation bar](images/navigation_bar.png =250x250)
 
 ### Settings page
 
