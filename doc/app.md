@@ -12,6 +12,8 @@ The map view displays a Google map with a floor map of the selected HFT building
 
 ![Map View](images/map_view_1.png | width=350)
 
+<img src="images/map_view_1.png" width="40%">
+
 #### Navigation
 
 The navigation bar enables the user to navigate to the settings page (right cog icon) as well as opening the side menu (hamburger menu icon on the left).
