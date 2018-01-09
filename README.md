@@ -3,20 +3,20 @@
 
 # Getting Started
 
-Clone the application from GIT hub and run it on the Android Studio. The application  installs and simply runs.
+Clone the application from GitHub and run it on the Android Studio. The application  installs and simply runs.
 (https://github.com/ProjectIndoor/projectindoorapp/)
 
 ## Prerequisites
 
 * Download and install the latest Android studio version.
-* Download and run the GIT hub for the respective device.
-* Configure the GIT hub.
+* Download and run the GitHub for the respective device.
+* Configure the GitHub.
 * Clone the application from Git and check the appropriate branch.
 * Run the application on the console or connected android device.
 
 # Installing
 
-An Android Package Kit file is given in the GIT_hub for the usage.The apk file is present in the build of the android studio.One just needs to install it on the device and we are good to go.
+An Android Package Kit file is given in the GitHub for the usage.The apk file is present in the build of the android studio.One just needs to install it on the device and we are good to go.
 
 # Deployment
 
