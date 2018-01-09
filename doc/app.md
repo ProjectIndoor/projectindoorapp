@@ -22,11 +22,11 @@ The navigation bar enables the user to navigate to the settings page (right cog 
 
 In the settings page the user is able to select the project context and the floor he/she is on. Both the project list and the floor list are fetched dynamically using the backend's REST API.
 
-<img src="images/settings.png" width="300px">
+<img src="images/settings.png" width="350px">
 
 <img src="images/settings_project_list.png" width="350px">
 
-<img src="images/settings_floor_list.png" width="4000px">
+<img src="images/settings_floor_list.png" width="350px">
 
 ### Side Menu
 
