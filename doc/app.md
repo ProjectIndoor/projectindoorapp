@@ -10,6 +10,8 @@ In this section, different components of the app will be discussed.
 
 The map view displays a Google map with a floor map of the selected HFT building floor map displaying.
 
+![Map View](images/map_view_1.png)
+
 #### Navigation
 
 The navigation bar enables the user to navigate to the settings page (right cog icon) as well as opening the side menu (hamburger menu icon on the left).
@@ -22,8 +24,11 @@ In the settings page the user is able to select the project context and the floo
 
 ![Settings page](images/settings.png)
 
-### Side Menu
+![Project selection](images/settings_project_list.png)
 
+![Floor selection](images/settings_floor_list.png)
+
+### Side Menu
 
 
 ![Side menu](images/side_menu.png)
