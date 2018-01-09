@@ -5,6 +5,7 @@ This application helps a person to navigate inside HFT Building easily. With thi
 # Getting Started
 
 Clone the application from GIT hub and run it on the Android Studio. The application  installs and simply runs.
+(https://github.com/ProjectIndoor/projectindoorapp/)
 
 ## Prerequisites
 
