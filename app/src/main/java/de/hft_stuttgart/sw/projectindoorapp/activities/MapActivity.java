@@ -265,7 +265,7 @@ public class MapActivity extends AppCompatActivity
         //this.addAccessPointMarkers(mMap);
 
         // Add Polyline to display track.
-        userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(Color.RED));
+        userTrack = mMap.addPolyline(new PolylineOptions().width(5).color(getResources().getColor(R.color.colorPrimary)));
 
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19), 4000, null);
         mImages.add(BitmapDescriptorFactory.fromResource(R.drawable.floor_map_4));
