@@ -41,6 +41,8 @@ For deployment an APK file is provided.
 It can be accessed in [Releases](https://github.com/ProjectIndoor/projectindoorapp/releases). 
 The latest release can be accessed [here](https://github.com/ProjectIndoor/projectindoorapp/releases/latest).
 
+The attached APK file can be moved to an Android device's file system and then be installed by executing it.
+
 ## Built With
 
 * [Android](https://developer.android.com/index.html) - Android framework used
