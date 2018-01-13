@@ -5,30 +5,30 @@ espresso
 
 play-services-maps
 
-retrofit;
+retrofit:
 Retrofit is a REST client for Android .Restrofit Api is used to make http call with backened server.
 
-converter-gson;
+converter-gson:
 A converter which uses  Gson for serialization to and from JSon.The Backend server sends data in
 Json format and this library is used to convert it into Java Object.
 
-okhttp;
+okhttp:
 okHttp is Http client used for communication with server.
 
 
 ## File Structure
-activities;
+activities:
 Activities folder contains the map and settings UI screen code.
 
-broadcast_recievers;
+broadcast_recievers:
 This folder contains broadcast receiver for receiving WIFI scan result and sending them to server.
 
-models;
+models:
 This folder contain model classes for example Building, Floor, Position etc..
 
-network;
+network:
 
-services;
+services:
 This folder contains services to fetch data from server using Rest APIs.
 
 
@@ -68,6 +68,7 @@ This screen will show list of projects available on server and will allow user t
 
 ### Floor info
 This screen will show list of floors available on server.
+
 <img src="images/settings_floor_list.png" width="350px">
 
 
