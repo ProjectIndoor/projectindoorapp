@@ -21,8 +21,10 @@ To get a basic setup you just need to clone the project and run a few commands t
 ```
 # Clone the project
 git clone https://github.com/ProjectIndoor/projectindoorapp.git
+
 # Installs the Debug build (Mac or Linux)
 ./gradlew installDebug
+
 # Installs the Debug build (Windows)
 gradlew installDebug
 ```
