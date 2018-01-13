@@ -18,7 +18,7 @@ However, the use of the IDE Android Studio is recommended, which contains the re
 
 To get a basic setup you just need to clone the project and run a few commands to get started:
 
-```
+```sh
 # Clone the project
 git clone https://github.com/ProjectIndoor/projectindoorapp.git
 
