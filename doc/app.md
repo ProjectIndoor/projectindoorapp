@@ -5,7 +5,7 @@ espresso
 
 play-services-maps
 
-[converter-gson](https://github.com/square/retrofit/tree/master/retrofit-converters/gson):
+[Gson Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson):
 A converter which uses  Gson for serialization to and from JSon.The Backend server sends data in
 Json format and this library is used to convert it into Java Object.
 
