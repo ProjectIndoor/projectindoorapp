@@ -1,9 +1,6 @@
 # Application Documentation
 
 ## Libraries
-espresso
-
-play-services-maps
 
 [Gson Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson):
 A converter which uses  Gson for serialization to and from JSon.The Backend server sends data in
@@ -46,6 +43,7 @@ In this section, different components of the app will be discussed.
 ### Map view
 
 The map view displays a Google map with a floor map of the selected HFT building floor map displaying.
+Floor map also reflects user's walking track.
 
 <img src="images/map_view_1.png" width="350px">
 
@@ -64,15 +62,19 @@ In the settings page the user is able to select the project context and the floo
 
 ### Project info
 This screen will show list of projects available on server and will allow user to select the project.
+Project selection is important in order to calculate the position correctly(project contain some
+parameter settings in backend)
 
 <img src="images/settings_project_list.png" width="350px">
 
 ### Floor info
-This screen will show list of floors available on server.
+This screen will show list of floors available on server. Selecting a floor triggers that the floor
+map in the map view is changed.
 
 <img src="images/settings_floor_list.png" width="350px">
 
 
 ### Side Menu
+The two buttons(Github) redirect the user to Github docs and Web frontend.
 
 <img src="images/side_menu.png" width="350px">
