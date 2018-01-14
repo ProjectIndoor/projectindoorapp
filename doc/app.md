@@ -1,7 +1,6 @@
 # Application Documentation
 
 ## Libraries
-play-services-maps
 
 [Gson Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson):
 A converter which uses  Gson for serialization to and from JSon.The Backend server sends data in
