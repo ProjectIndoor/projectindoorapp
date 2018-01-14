@@ -10,7 +10,7 @@ A converter which uses  Gson for serialization to and from JSon.The Backend serv
 Json format and this library is used to convert it into Java Object.
 
 [Retrofit](http://square.github.io/retrofit/):
-Retrofit is a REST client for Android .Restrofit Api is used to make http call with backened server.
+Retrofit is a REST client for Android. Restrofit Api is used to make http calls to the backened server.
 
 [OkHttp](http://square.github.io/okhttp/):
 okHttp is Http client used for communication with server.
