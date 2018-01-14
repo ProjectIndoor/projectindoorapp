@@ -6,6 +6,7 @@
 These instructions will get you a copy of the project up and running on your local machine for development purposes. 
 See [deployment](#deployment) for notes on how to deploy the project on an Android device.
 
+See the the [Application Documentation](doc/app.md) for further user and developer instructions.
 
 ## Prerequisites
 
