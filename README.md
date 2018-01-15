@@ -1,5 +1,5 @@
 # Project Indoor (Mobile)
- With this app installed in the mobile device a user can see the floor maps of HFT building and gets to know their location, track their recently walked path and gets to know their surrounding area like steps, cafeteria.
+ With this app installed in the mobile device a user can see the floor maps of HFT building and get to know their location, track their recently walked path and gets to know their surrounding area like steps, cafeteria and some other reference points.
 
 # Getting Started
 
